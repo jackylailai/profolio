@@ -26,7 +26,15 @@ AGENTS.md       — this file
 .github/        — Pages deployment workflow
 ```
 
-Do not introduce build tooling, package managers, or transpilers. If a feature needs more than vanilla JS, reconsider the feature.
+Do not introduce build tooling, package managers, or transpilers. Vanilla JS only — but **CDN-loaded libraries via `<script src="https://cdn...">` are allowed** for visual effects. Current set:
+
+- `@tsparticles/slim` — cyber-network particle backdrop
+- `gsap` + `ScrollTrigger` — scroll-driven reveals and timeline animations
+- `lenis` — smooth scroll (integrates with ScrollTrigger via `gsap.ticker`)
+- `typed.js` — typing effect on the hero tagline
+- `Google Fonts` — Space Grotesk, Inter, JetBrains Mono
+
+Add a new CDN dependency only if it materially raises the visual bar; prefer one well-loved library over three small ones. Always gate motion-heavy effects behind `prefers-reduced-motion`.
 
 ## 3. Design direction — modern + futuristic
 
