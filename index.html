@@ -1,24 +1,28 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Jacky Lai 的個人履歷網站，展示後端工程、全端開發、side projects、工作經歷與證照。"
+      content="Jacky Lai — Cloud-native backend engineer. 50K QPS · EKS · Terraform · Spring Boot · Redis · Kafka. Currently tinkering with AI workflow engineering on the side."
     />
-    <meta name="theme-color" content="#10211f" />
-    <meta property="og:title" content="Jacky Lai - Portfolio" />
+    <meta name="theme-color" content="#060912" />
+    <meta property="og:title" content="Jacky Lai · Cloud-native Backend Engineer" />
     <meta
       property="og:description"
-      content="Software engineer portfolio, resume, projects, experience, and certifications."
+      content="Cloud-native backend engineer. Spends weekdays keeping high-traffic systems alive on AWS / EKS; spends weekends tinkering with LLM workflow engineering."
     />
     <meta property="og:type" content="website" />
-    <title>Jacky Lai - Portfolio</title>
+    <title>Jacky Lai · Backend Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+
+    <div id="tsparticles" aria-hidden="true"></div>
 
     <header class="site-header" data-header>
       <nav class="nav shell" aria-label="Primary navigation">
@@ -36,10 +40,10 @@
 
         <div class="nav-links" id="site-menu">
           <a href="#about">About</a>
+          <a href="#resume-helper">Resume Helper</a>
           <a href="#skills">Skills</a>
-          <a href="#projects">Projects</a>
           <a href="#experience">Experience</a>
-          <a href="#certifications">Certifications</a>
+          <a href="#credentials">Credentials</a>
           <a href="#contact">Contact</a>
         </div>
 
@@ -67,103 +71,267 @@
     </header>
 
     <main id="main">
+      <!-- ==================================================== HERO -->
       <section class="hero" id="top" aria-label="Intro">
-        <img class="hero-image" src="assets/hero-workspace.png" alt="" />
-        <div class="hero-overlay"></div>
+        <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-content shell">
-          <p class="eyebrow">Backend Engineer / Full-stack Builder</p>
-          <h1>Jacky Lai</h1>
-          <p class="hero-lead">
-            專注把複雜的業務流程整理成穩定、可維護的系統。熟悉後端服務、資料庫整合、自動化工具與產品化交付，也會把 side project 做到能展示工程品質。
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#projects">View Projects</a>
-            <a class="button button-secondary" href="#contact">Contact</a>
+          <div class="hero-status reveal">
+            <span class="dot" aria-hidden="true"></span>
+            <span>SYSTEM ONLINE · OPEN TO BACKEND / PLATFORM ROLES</span>
           </div>
-          <dl class="hero-metrics" aria-label="Portfolio highlights">
+          <p class="eyebrow reveal reveal-delay-1">Cloud-native Backend Engineer · Kubernetes &amp; AWS</p>
+          <h1 class="reveal reveal-delay-1">
+            I keep <span class="accent">cloud-native backends</span><br />
+            standing up at scale.
+          </h1>
+          <p class="hero-lead reveal reveal-delay-2">
+            <span data-typed-target>Backend engineer · I live in AWS, EKS, Terraform and Redis.</span>
+          </p>
+          <div class="hero-actions reveal reveal-delay-3">
+            <a class="button button-primary" href="#about">
+              Read the story
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </a>
+            <a class="button button-quiet" href="#resume-helper">Or peek at my side project →</a>
+          </div>
+          <dl class="hero-metrics reveal reveal-delay-3" aria-label="Highlights">
             <div>
-              <dt>Backend</dt>
-              <dd>API and data workflows</dd>
+              <dt>50K QPS</dt>
+              <dd>peak traffic backend operations</dd>
             </div>
             <div>
-              <dt>Full-stack</dt>
-              <dd>Product UI to persistence</dd>
+              <dt>40 → 5 min</dt>
+              <dd>CI/CD pipeline cut by 87%</dd>
             </div>
             <div>
-              <dt>Quality</dt>
-              <dd>Tests, tooling, delivery</dd>
+              <dt>EC2 → EKS</dt>
+              <dd>migration · Terraform · Helm</dd>
             </div>
           </dl>
         </div>
       </section>
 
+      <!-- ==================================================== ABOUT -->
       <section class="section intro-band" id="about">
-        <div class="shell two-column">
-          <div>
-            <p class="section-kicker">About</p>
-            <h2>把需求、資料與工程品質接起來。</h2>
+        <div class="shell">
+          <div class="section-heading reveal">
+            <p class="section-kicker">// About</p>
+            <h2>Hi, 我是 Jacky.</h2>
           </div>
-          <div class="rich-copy">
-            <p>
-              我偏好的工程方式是先把資料模型、狀態轉移、錯誤處理與測試邊界定清楚，再用簡潔可靠的實作支撐長期維護。
-            </p>
-            <p>
-              目前 portfolio 先放可公開的專案摘要，包含近期正在做的 Resume Helper，也保留空間讓你之後補上其他工作經歷、證照與更完整的專案成果。
-            </p>
+
+          <div class="two-column align-start">
+            <div class="rich-copy reveal">
+              <p>
+                喜歡<strong>打籃球</strong>，偶爾去<strong>衝浪</strong>，也喜歡<strong>旅遊</strong>。
+              </p>
+              <p>
+                工作上是後端工程師——主力是 <strong>Java、高併發、event-driven 架構</strong>。
+              </p>
+              <p>
+                也<strong>擅長雲端跟 Kubernetes</strong>，平常都在 AWS / EKS 上面工作。
+              </p>
+              <p>
+                <strong>非本科出身</strong>——大學念中山醫學大學影像暨放射科學系，後來透過網路自學轉職軟體工程師。
+              </p>
+              <p>
+                最近有興趣研究 <strong>LLM workflow</strong>，下面 Resume Helper 那一塊就是這方向的 side project。
+              </p>
+            </div>
+
+            <div class="reveal reveal-delay-1">
+              <p class="section-kicker" style="margin-bottom: 14px;">// What I&rsquo;m good at</p>
+              <div class="highlight-grid">
+                <article class="highlight-card">
+                  <p class="label">// Main</p>
+                  <p class="figure">Java · Spring Boot<span>高併發 · event-driven</span></p>
+                </article>
+                <article class="highlight-card">
+                  <p class="label">// Cloud</p>
+                  <p class="figure">AWS · EKS<span>Terraform · Helm · 喜歡也擅長</span></p>
+                </article>
+                <article class="highlight-card">
+                  <p class="label">// Event &amp; Data</p>
+                  <p class="figure">Kafka · Redis<span>async workflow · hot key 分流</span></p>
+                </article>
+                <article class="highlight-card">
+                  <p class="label">// Delivery</p>
+                  <p class="figure">CI/CD<span>GitLab · GitHub Actions</span></p>
+                </article>
+                <article class="highlight-card">
+                  <p class="label">// Observability</p>
+                  <p class="figure">ELK + Grafana<span>OpenSearch · Prometheus</span></p>
+                </article>
+                <article class="highlight-card">
+                  <p class="label">// Side Quest</p>
+                  <p class="figure">LLM Workflow<span>schema · versioning · eval</span></p>
+                </article>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      <!-- ==================================================== RESUME HELPER -->
+      <section class="section project-section" id="resume-helper">
+        <div class="shell">
+          <div class="section-heading compact reveal">
+            <p class="section-kicker">// Side Project · 最近在玩的</p>
+            <h2>Resume Helper.</h2>
+            <p>
+              做這個的<strong>初衷其實只是為了方便根據 JD 修改履歷</strong>——每改一份手動花一兩小時實在太煩。於是寫了個工具：自動爬 JD、評分、生成 tailored 履歷。順便當作 <strong>LLM workflow 工程</strong>的練習場。
+            </p>
+          </div>
+
+          <article class="featured-project reveal reveal-delay-1">
+            <div class="featured-inner">
+              <div class="featured-headline">
+                <p class="eyebrow">// Architecture</p>
+                <h3>Workflow-first，不是 chatbot-first。</h3>
+                <p>
+                  雖然出發點很實用，但做下去之後變成在練後端工程：<strong>每一個 LLM 呼叫都當成一個一般的後端服務</strong>——有 I/O contract、schema 驗證、prompt 版本、cost guardrail、regression test。這樣 prompt 改了一行，我也能信任系統行為是可預測的。LLM 是「邊界清楚的同事」，不是大腦。
+                </p>
+                <ul class="featured-meta">
+                  <li>FastAPI</li>
+                  <li>PostgreSQL</li>
+                  <li>Anthropic API</li>
+                  <li>Playwright</li>
+                  <li>Docker</li>
+                  <li>WeasyPrint</li>
+                </ul>
+
+                <div class="architecture" aria-label="Workflow architecture">
+                  <div class="step">JD Scrape<span>104 / Yourator / LinkedIn</span></div>
+                  <div class="step is-accent">LLM Score<span>0–100 · bounded step</span></div>
+                  <div class="step is-violet">Route<span>Apply / Tailor / Skip</span></div>
+                  <div class="step">Generate<span>tailored resume · PDF</span></div>
+                </div>
+
+                <div class="featured-cta">
+                  <a
+                    class="button button-primary"
+                    href="https://github.com/jackylailai/resumeHelper"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    View on GitHub
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 7h10v10M7 17 17 7" />
+                    </svg>
+                  </a>
+                  <a class="button button-secondary" href="#about">Back to story</a>
+                </div>
+              </div>
+
+              <div class="pillar-grid">
+                <div class="pillar">
+                  <h4>Explicit I/O Contracts</h4>
+                  <p>每個 LLM call 都寫明 input / output spec，Pydantic schema 卡死，輸出形狀錯了直接 fail-fast。</p>
+                </div>
+                <div class="pillar">
+                  <h4>Prompt Versioning</h4>
+                  <p>Prompt 跟 model 版本都進 audit log，能回溯哪個版本產生了哪份輸出，方便 A/B 跟 rollback。</p>
+                </div>
+                <div class="pillar">
+                  <h4>Eval Harness</h4>
+                  <p>有 golden fixture 跟 deterministic eval，prompt 改一行就能跑 regression report 看誰變好誰變差。</p>
+                </div>
+                <div class="pillar">
+                  <h4>Cost Guardrails</h4>
+                  <p>token / cost / quota / privacy guardrail 內建。預算炸掉之前先擋，每次呼叫都有成本紀錄。</p>
+                </div>
+                <div class="pillar">
+                  <h4>Pluggable Backend</h4>
+                  <p>同一份 code 可切 fake / Claude CLI / Anthropic API 三種 backend，離線測試完全不花錢。</p>
+                </div>
+                <div class="pillar">
+                  <h4>App-Owned State</h4>
+                  <p>狀態轉換、retry、人工 review gate 全部由 app 控制，不讓 LLM 自己決定下一步。</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ==================================================== SKILLS -->
       <section class="section" id="skills">
         <div class="shell">
-          <div class="section-heading">
-            <p class="section-kicker">Skills</p>
-            <h2>技術棧</h2>
-            <p>以後端與資料流程為核心，搭配前端介面、部署工具與測試策略，把功能推到可交付狀態。</p>
+          <div class="section-heading reveal">
+            <p class="section-kicker">// Skills</p>
+            <h2>Tech stack.</h2>
+            <p>主力在後端跟雲原生 / Kubernetes，CI/CD 跟 observability 是日常，LLM workflow 是最近在練的副本。</p>
           </div>
 
           <div class="skill-grid">
-            <article class="skill-panel">
+            <article class="skill-panel reveal">
               <div class="skill-icon" aria-hidden="true">BE</div>
               <h3>Backend</h3>
               <ul class="tag-list">
                 <li>Java</li>
                 <li>Spring Boot</li>
+                <li>Netty</li>
                 <li>Python</li>
                 <li>FastAPI</li>
-                <li>REST API</li>
+                <li>REST</li>
+                <li>WebSocket</li>
               </ul>
             </article>
-            <article class="skill-panel">
-              <div class="skill-icon" aria-hidden="true">DB</div>
-              <h3>Data & Ops</h3>
+            <article class="skill-panel reveal reveal-delay-1">
+              <div class="skill-icon" aria-hidden="true">DATA</div>
+              <h3>Data &amp; Cache</h3>
               <ul class="tag-list">
+                <li>Redis</li>
+                <li>Kafka</li>
                 <li>Oracle</li>
                 <li>PostgreSQL</li>
-                <li>SQL Tuning</li>
-                <li>Alembic</li>
-                <li>Docker</li>
+                <li>MySQL</li>
+                <li>MongoDB</li>
               </ul>
             </article>
-            <article class="skill-panel">
-              <div class="skill-icon" aria-hidden="true">FE</div>
-              <h3>Frontend</h3>
+            <article class="skill-panel reveal reveal-delay-2">
+              <div class="skill-icon" aria-hidden="true">INFRA</div>
+              <h3>Cloud &amp; Infra</h3>
               <ul class="tag-list">
-                <li>JavaScript</li>
-                <li>TypeScript</li>
-                <li>HTML/CSS</li>
-                <li>Responsive UI</li>
-                <li>Product UX</li>
+                <li>AWS · EKS</li>
+                <li>ASG · ALB</li>
+                <li>NAT GW</li>
+                <li>Lambda</li>
+                <li>EventBridge</li>
+                <li>Terraform</li>
+                <li>Terragrunt</li>
+                <li>Helm</li>
               </ul>
             </article>
-            <article class="skill-panel">
+            <article class="skill-panel reveal reveal-delay-3">
+              <div class="skill-icon" aria-hidden="true">OBS</div>
+              <h3>CI/CD &amp; Observability</h3>
+              <ul class="tag-list">
+                <li>GitLab Runner</li>
+                <li>GitHub Actions</li>
+                <li>Prometheus</li>
+                <li>Grafana</li>
+                <li>OpenSearch (ELK)</li>
+              </ul>
+            </article>
+            <article class="skill-panel reveal">
+              <div class="skill-icon" aria-hidden="true">AI</div>
+              <h3>AI Engineering</h3>
+              <ul class="tag-list">
+                <li>LLM workflow</li>
+                <li>Prompt versioning</li>
+                <li>Eval harness</li>
+                <li>Cost guardrails</li>
+                <li>Anthropic API</li>
+              </ul>
+            </article>
+            <article class="skill-panel reveal reveal-delay-1">
               <div class="skill-icon" aria-hidden="true">QA</div>
               <h3>Quality</h3>
               <ul class="tag-list">
                 <li>pytest</li>
                 <li>Testcontainers</li>
                 <li>Playwright</li>
-                <li>GitLab CI</li>
+                <li>JUnit</li>
                 <li>Ruff</li>
               </ul>
             </article>
@@ -171,153 +339,118 @@
         </div>
       </section>
 
-      <section class="section project-section" id="projects">
-        <div class="shell">
-          <div class="section-heading compact">
-            <p class="section-kicker">Side Projects</p>
-            <h2>目前的 side projects</h2>
-          </div>
-
-          <div class="project-grid">
-            <article class="project-card">
-              <div class="project-visual visual-one" aria-hidden="true">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="project-body">
-                <p class="project-type">AI / Productivity</p>
-                <h3>Resume Helper</h3>
-                <p>
-                  單人求職作業台，支援履歷 profile、JD 評分、背景 tailoring、PDF 產出與 Applications tracker。重點放在資料模型、狀態路由、測試與可部署性。
-                </p>
-                <ul class="meta-list">
-                  <li>FastAPI</li>
-                  <li>PostgreSQL</li>
-                  <li>LLM workflow</li>
-                </ul>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="project-visual visual-two" aria-hidden="true">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="project-body">
-                <p class="project-type">Automation / Internal Tool</p>
-                <h3>Promotion Workflow Toolkit</h3>
-                <p>
-                  將促銷資料整理、檢查與交付流程自動化，降低人工比對成本，讓資料異常能更早被發現。
-                </p>
-                <ul class="meta-list">
-                  <li>Java</li>
-                  <li>Oracle</li>
-                  <li>CLI</li>
-                </ul>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="project-visual visual-three" aria-hidden="true">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="project-body">
-                <p class="project-type">Web App / Tooling</p>
-                <h3>Project Name</h3>
-                <p>
-                  預留給下一個你想公開展示的專案。建議補上問題背景、你的實作範圍、技術選型與可量化成果。
-                </p>
-                <ul class="meta-list">
-                  <li>Stack</li>
-                  <li>Demo</li>
-                  <li>GitHub</li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
+      <!-- ==================================================== EXPERIENCE -->
       <section class="section" id="experience">
         <div class="shell two-column align-start">
-          <div class="sticky-heading">
-            <p class="section-kicker">Experience</p>
-            <h2>工作經歷</h2>
+          <div class="sticky-heading reveal">
+            <p class="section-kicker">// Experience</p>
+            <h2>Career arc.</h2>
             <p>
-              這裡先用可公開的工程描述佔位，之後可以替換成正式公司名稱、職稱、時間與具體成果。
+              從教育平台寫 API、帶小團隊跑 sprint，到 momo 顧高流量系統、推 EKS 遷移；下班順便玩玩 AI workflow。
             </p>
           </div>
 
           <div class="timeline">
-            <article class="timeline-item">
+            <article class="timeline-item reveal">
               <div class="timeline-dot" aria-hidden="true"></div>
-              <p class="timeline-date">2024 - Present</p>
-              <h3>Software Engineer - Company Name</h3>
-              <p>
-                負責核心業務系統維護與功能開發，處理跨系統資料串接、上線流程與問題追蹤。
-              </p>
+              <p class="timeline-date">Apr 2025 — Present</p>
+              <h3>Backend Engineer · Fubon Media Technology (momo)</h3>
+              <p>負責高流量促銷系統後端維運，主導雲原生遷移與 CI/CD 流程優化。</p>
               <ul>
-                <li>建立可重複使用的資料檢核流程，縮短人工驗證時間。</li>
-                <li>改善批次作業與查詢流程，降低例行維運成本。</li>
+                <li>峰值 <strong>50,000 QPS</strong> 系統維運，設計 Redis 快取策略過濾熱點請求、降低 DB 壓力，搭配 AWS Auto Scaling 動態擴展。</li>
+                <li>主導 CI/CD 優化將部署時間從 <strong>40 分鐘縮短至 5 分鐘</strong> (87.5% reduction)，提高發版頻率與事故回應速度。</li>
+                <li>推動系統架構從 <strong>EC2 → ASG → EKS</strong> 的容器化遷移，使用 Terraform、Terragrunt 與 Helm 建立可重複的雲原生部署。</li>
+                <li>設計 Redis key partitioning 策略，乾淨切分 staging / production 流量，杜絕跨環境資料污染。</li>
+                <li>建立 OpenSearch (ELK) + Prometheus + Grafana 觀測體系，整合 Kafka consumer 處理非同步工作流。</li>
               </ul>
             </article>
 
-            <article class="timeline-item">
+            <article class="timeline-item reveal reveal-delay-1">
               <div class="timeline-dot" aria-hidden="true"></div>
-              <p class="timeline-date">2022 - 2024</p>
-              <h3>Backend Developer - Company Name</h3>
-              <p>
-                參與 API、管理後台與資料庫相關功能開發，並協助排查 production issue。
-              </p>
+              <p class="timeline-date">Aug 2023 — Apr 2025</p>
+              <h3>Software Engineer · Tengtz Communications</h3>
+              <p>教育平台後端開發與 CI/CD 建置，帶領小團隊執行多個 sprint。</p>
               <ul>
-                <li>與產品、QA 與營運角色協作，將需求拆解成可交付的開發項目。</li>
-                <li>補強重要流程的日誌與錯誤處理，提高問題定位效率。</li>
+                <li>設計 RESTful API 與 Netty 長連線通訊系統，支援即時互動課堂 session。</li>
+                <li>主導 GitLab CI/CD 建置，導入 multi-stage build、平行執行與快取策略，建立全團隊採用的環境部署模式。</li>
+                <li>跨服務的 multi-threaded log 監控、結構化 logging 與錯誤分類，顯著降低 debug 時間。</li>
+                <li>帶領小型工程團隊跑多個 sprint cycle，負責技術決策、code review 與跨職能協調。</li>
+              </ul>
+            </article>
+
+            <article class="timeline-item reveal reveal-delay-2">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <p class="timeline-date">Jun 2023 — Dec 2023</p>
+              <h3>Backend Engineer Trainee · WeHelp Bootcamp</h3>
+              <p>密集訓練後端開發、雲端部署與第三方整合。</p>
+              <ul>
+                <li>用 Flask 寫 RESTful API、JWT auth 與第三方金流整合，部署到 AWS (EC2, S3, RDS) + Nginx HTTPS。</li>
               </ul>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section certificate-band" id="certifications">
+      <!-- ==================================================== CREDENTIALS -->
+      <section class="section certificate-band" id="credentials">
         <div class="shell">
-          <div class="section-heading compact">
-            <p class="section-kicker">Certifications</p>
-            <h2>證照與進修</h2>
+          <div class="section-heading compact reveal">
+            <p class="section-kicker">// Credentials</p>
+            <h2>Education &amp; certifications.</h2>
           </div>
 
           <div class="certificate-grid">
-            <article>
-              <span>01</span>
-              <h3>Certification Name</h3>
-              <p>Issuing Organization - 2026</p>
+            <article class="reveal">
+              <span>01 · Education</span>
+              <h3>中山醫學大學影像暨放射科學系</h3>
+              <p>2014 – 2018</p>
             </article>
-            <article>
-              <span>02</span>
-              <h3>Cloud / Backend Course</h3>
-              <p>Provider - 2025</p>
+            <article class="reveal reveal-delay-1">
+              <span>02 · Licensed</span>
+              <h3>Licensed Medical Radiographer</h3>
+              <p>Taiwan national license</p>
             </article>
-            <article>
-              <span>03</span>
-              <h3>Language / Domain Skill</h3>
-              <p>Provider - 2024</p>
+            <article class="reveal reveal-delay-2">
+              <span>03 · Certified</span>
+              <h3>Certified Radiation Protection Officer</h3>
+              <p>Taiwan national exam · pass rate &lt; 10%</p>
+            </article>
+            <article class="reveal">
+              <span>04 · Language</span>
+              <h3>TOEIC 790</h3>
+              <p>英文技術文件閱讀與跨國團隊書面協作</p>
             </article>
           </div>
         </div>
       </section>
 
+      <!-- ==================================================== CONTACT -->
       <section class="section contact-section" id="contact">
         <div class="shell contact-layout">
-          <div>
-            <p class="section-kicker">Contact</p>
-            <h2>Let's build something maintainable.</h2>
+          <div class="reveal">
+            <p class="section-kicker">// Contact</p>
+            <h2>Let&rsquo;s build something<br />that stays up.</h2>
             <p>
-              歡迎交流後端系統、AI workflow、內部工具、自動化流程與產品工程相關機會。
+              想聊雲原生、Kubernetes、CI/CD、高流量系統，或 LLM workflow 工程實踐都歡迎丟訊息給我。技術挑戰夠有趣的工作機會也接受。
             </p>
           </div>
-          <div class="contact-actions" aria-label="Contact links">
-            <a class="button button-primary" href="mailto:your.email@example.com">Email</a>
-            <a class="button button-secondary" href="https://github.com/your-github-id">GitHub</a>
-            <a class="button button-secondary" href="https://www.linkedin.com/in/your-linkedin-id">LinkedIn</a>
-            <button class="button button-quiet" type="button" data-copy-email="your.email@example.com">
-              Copy Email
+          <div class="contact-actions reveal reveal-delay-1" aria-label="Contact links">
+            <a class="button button-primary" href="mailto:jkdd84@gmail.com">
+              jkdd84@gmail.com
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 7l9 6 9-6M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2" />
+              </svg>
+            </a>
+            <a
+              class="button button-secondary"
+              href="https://github.com/jackylailai"
+              target="_blank"
+              rel="noopener"
+            >
+              github.com/jackylailai
+            </a>
+            <button class="button button-quiet" type="button" data-copy-email="jkdd84@gmail.com">
+              Copy email
             </button>
             <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
           </div>
@@ -327,11 +460,19 @@
 
     <footer class="site-footer">
       <div class="shell footer-inner">
-        <p>© <span data-year></span> Jacky Lai. Built for GitHub Pages.</p>
-        <a href="#top">Back to top</a>
+        <p>© <span data-year></span> Jacky Lai · Built with vanilla HTML / CSS / JS.</p>
+        <a href="#top">↑ Back to top</a>
       </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- ====== CDN libraries (no build) ====== -->
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.5.0/tsparticles.engine.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@3.5.0/tsparticles.slim.bundle.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.42/dist/lenis.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
+
+    <script src="script.js" defer></script>
   </body>
 </html>
