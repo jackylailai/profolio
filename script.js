@@ -235,9 +235,9 @@ if (typedTarget && typeof Typed !== "undefined" && !prefersReducedMotion) {
   // eslint-disable-next-line no-new
   new Typed(typedTarget, {
     strings: [
-      "後端工程師，專注高併發系統與 AI workflow 工程。",
-      "Backend engineer · 50K QPS · Spring Boot / Redis / Kafka.",
-      "Putting LLMs inside maintainable backends.",
+      "Backend engineer · I live in AWS, EKS, Terraform and Redis.",
+      "Cloud-native at 50K QPS · Spring Boot / Kafka / EKS.",
+      "Weekends: tinkering with LLM workflows on the side.",
     ],
     typeSpeed: 36,
     backSpeed: 18,

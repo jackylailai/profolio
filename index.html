@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Jacky Lai — Backend Engineer. 50K QPS · Spring Boot · Redis · Kafka · EKS. Currently building Resume Helper, an AI workflow side project."
+      content="Jacky Lai — Cloud-native backend engineer. 50K QPS · EKS · Terraform · Spring Boot · Redis · Kafka. Currently tinkering with AI workflow engineering on the side."
     />
     <meta name="theme-color" content="#060912" />
-    <meta property="og:title" content="Jacky Lai · Backend Engineer" />
+    <meta property="og:title" content="Jacky Lai · Cloud-native Backend Engineer" />
     <meta
       property="og:description"
-      content="Backend engineer focused on high-concurrency systems and AI workflow engineering."
+      content="Cloud-native backend engineer. Spends weekdays keeping high-traffic systems alive on AWS / EKS; spends weekends tinkering with LLM workflow engineering."
     />
     <meta property="og:type" content="website" />
     <title>Jacky Lai · Backend Engineer</title>
@@ -79,33 +79,33 @@
             <span class="dot" aria-hidden="true"></span>
             <span>SYSTEM ONLINE · OPEN TO BACKEND / PLATFORM ROLES</span>
           </div>
-          <p class="eyebrow reveal reveal-delay-1">Backend Engineer · AI Workflow Builder</p>
+          <p class="eyebrow reveal reveal-delay-1">Cloud-native Backend Engineer · Kubernetes &amp; AWS</p>
           <h1 class="reveal reveal-delay-1">
-            Building <span class="accent">resilient systems</span><br />
-            that hold under pressure.
+            I keep <span class="accent">cloud-native backends</span><br />
+            standing up at scale.
           </h1>
           <p class="hero-lead reveal reveal-delay-2">
-            <span data-typed-target>後端工程師，專注高併發系統與 AI workflow 工程。</span>
+            <span data-typed-target>Backend engineer · I live in AWS, EKS, Terraform and Redis.</span>
           </p>
           <div class="hero-actions reveal reveal-delay-3">
-            <a class="button button-primary" href="#resume-helper">
-              View Resume Helper
+            <a class="button button-primary" href="#about">
+              Read the story
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
             </a>
-            <a class="button button-secondary" href="#about">About me</a>
+            <a class="button button-quiet" href="#resume-helper">Or peek at my side project →</a>
           </div>
           <dl class="hero-metrics reveal reveal-delay-3" aria-label="Highlights">
             <div>
               <dt>50K QPS</dt>
-              <dd>峰值流量下的後端維運實戰</dd>
+              <dd>peak traffic backend operations</dd>
             </div>
             <div>
               <dt>40 → 5 min</dt>
-              <dd>主導 CI/CD 流程優化，部署時間縮短 87%</dd>
+              <dd>CI/CD pipeline cut by 87%</dd>
             </div>
             <div>
               <dt>EC2 → EKS</dt>
-              <dd>容器化遷移，Terraform / Helm 雲原生部署</dd>
+              <dd>migration · Terraform · Helm</dd>
             </div>
           </dl>
         </div>
@@ -116,42 +116,45 @@
         <div class="shell">
           <div class="section-heading reveal">
             <p class="section-kicker">// About</p>
-            <h2>從急診影像室<br />走進高併發後端。</h2>
+            <h2>急診室影像出身，<br />現在在雲端上養系統。</h2>
           </div>
 
           <div class="two-column align-start">
             <div class="rich-copy reveal">
               <p>
-                我是 <strong>Jacky Lai</strong>，目前在
-                <strong>富邦媒體科技 (momo)</strong> 擔任後端工程師。大學主修醫學影像暨放射科學，畢業後取得
-                <strong>醫事放射師</strong>執照，並通過錄取率不到 10% 的
-                <strong>輻射防護師</strong>國家考試。
+                嗨，我是 <strong>Jacky</strong>，現在在 <strong>momo（富邦媒體科技）</strong>當後端工程師。日常就是在 AWS 跟 EKS 上面把高流量系統照顧好，盯著 Grafana 看流量、追記憶體、debug 那種「為什麼這台 pod 又重啟」的問題。
               </p>
               <p>
-                醫療現場——尤其是急診與重症影像——要求在極短時間內保持冷靜、做出關鍵判斷，容不下猶豫與失誤。這段高壓環境的歷練，後來在處理生產環境事故與高併發系統異常時，成為我真正的優勢。
+                我最有感的是<strong>雲端跟 Kubernetes</strong>這塊。從 EC2 一路推到 ASG、再到 EKS，用 Terraform / Terragrunt / Helm 把整套部署做成可重複、可維運的流程——那種「整個 stack 都掌握在手上」的感覺，是我最喜歡這份工作的部分。Redis 怎麼切 key、NAT Gateway 怎麼配、CI/CD 怎麼壓到 5 分鐘以內，這些細節我都很有興趣。
               </p>
               <p>
-                我選擇後端工程師這條路，是因為對「<strong>系統如何在高壓下維持穩定</strong>」有執念——從原理與規則出發探究系統邊界，找根本原因，而不是只處理表面症狀。這跟醫療背景給我的思維訓練是同一件事。
+                之所以會走後端這條路，其實是因為我對「<strong>系統在高壓下怎麼還撐得住</strong>」這件事一直很有執念。這跟我大學念<strong>醫學影像</strong>、後來做<strong>醫事放射師</strong>有點像——急診跟重症影像要求你在很短的時間內冷靜下來、抓到問題真正的點。生產環境出事跟臨床急救的思考方式，意外地很像。
               </p>
               <p>
-                工作之外，我持續探索 <strong>AI workflow</strong> 的工程實踐。最近自主開發
-                <strong>Resume Helper</strong>，把履歷與職缺媒合流程拆解成多個 bounded LLM step，由應用程式控制狀態轉換、加入 schema 驗證、prompt 版本管理與 cost guardrail——把 LLM 放進可維運的後端系統。
+                最近多了一個興趣是 <strong>AI workflow 工程</strong>——不是「拿 ChatGPT 寫 code」那種，而是想搞清楚怎麼把 LLM 當成<strong>有邊界的服務</strong>放進後端系統裡：schema 驗證、prompt 版本、cost guardrail、eval harness 這些東西。所以我做了個 side project 叫 <strong>Resume Helper</strong>，就在下面那一塊。
+              </p>
+              <p>
+                工作之外的事：大學是系籃隊長、高中帶康輔社。帶人這件事教會我「分配任務」跟「讓每個人發揮所長」是兩回事。
               </p>
             </div>
 
             <div class="reveal reveal-delay-1">
               <div class="highlight-grid">
                 <article class="highlight-card">
+                  <p class="label">// Cloud</p>
+                  <p class="figure">EC2 → EKS<span>主導容器化遷移 · Terraform · Helm</span></p>
+                </article>
+                <article class="highlight-card">
                   <p class="label">// Scale</p>
-                  <p class="figure">50,000 QPS<span>peak traffic backend operations</span></p>
+                  <p class="figure">50,000 QPS<span>促銷高峰系統維運</span></p>
                 </article>
                 <article class="highlight-card">
                   <p class="label">// Delivery</p>
-                  <p class="figure">87% faster<span>CI/CD pipeline from 40 to 5 minutes</span></p>
+                  <p class="figure">40 → 5 min<span>CI/CD pipeline 砍掉 87%</span></p>
                 </article>
                 <article class="highlight-card">
-                  <p class="label">// Cloud</p>
-                  <p class="figure">EC2 → EKS<span>Terraform · Terragrunt · Helm</span></p>
+                  <p class="label">// Side Quest</p>
+                  <p class="figure">AI Workflow<span>把 LLM 放進可維運的後端</span></p>
                 </article>
                 <article class="highlight-card">
                   <p class="label">// Credential</p>
@@ -159,11 +162,7 @@
                 </article>
                 <article class="highlight-card">
                   <p class="label">// Language</p>
-                  <p class="figure">TOEIC 790<span>英文技術文件 / 跨國協作</span></p>
-                </article>
-                <article class="highlight-card">
-                  <p class="label">// Now</p>
-                  <p class="figure">AI Workflow<span>把 LLM 放進可維運後端</span></p>
+                  <p class="figure">TOEIC 790<span>英文技術文件 / 跨國書面協作</span></p>
                 </article>
               </div>
             </div>
@@ -175,10 +174,10 @@
       <section class="section project-section" id="resume-helper">
         <div class="shell">
           <div class="section-heading compact reveal">
-            <p class="section-kicker">// Side Project · Currently Building</p>
+            <p class="section-kicker">// Side Project · 最近在玩的</p>
             <h2>Resume Helper.</h2>
             <p>
-              一套 single-user AI workflow，把求職流程切成可控的 LLM step：JD 爬取 → LLM 評分 → 確定性狀態路由 → 客製化履歷生成。**應用程式擁有所有狀態轉換**，LLM 只是 bounded provider。
+              這是我下班後在做的 side project，主要是想搞清楚「<strong>怎麼把 LLM 變成一個能維運的後端模組</strong>」——不是 chatbot 那種，是把求職流程切成幾個有邊界的 LLM step，由應用程式控制每一個狀態轉換。<strong>LLM 是 bounded provider，不是大腦。</strong>
             </p>
           </div>
 
@@ -186,9 +185,9 @@
             <div class="featured-inner">
               <div class="featured-headline">
                 <p class="eyebrow">// Architecture</p>
-                <h3>把 LLM 放進可維運的後端系統。</h3>
+                <h3>Workflow-first，不是 chatbot-first。</h3>
                 <p>
-                  不是 chatbot-first，而是 <strong>workflow-first</strong>。每一個 LLM 呼叫都有 explicit I/O contract、schema 驗證、prompt 版本控管、cost / quota guardrail，以及黃金 fixture 的回歸測試套件——確保系統行為在每次 prompt 變更後仍然可預測。
+                  我做這個的初衷是：<strong>每一個 LLM 呼叫都應該像呼叫一個一般的後端服務</strong>——有明確的 I/O contract、有 schema 驗證、有 prompt 版本、有 cost guardrail、有 regression test。這樣 prompt 改了一行，我也能信任系統行為是可預測的。等於把 LLM 當成「一個會犯錯但邊界清楚」的同事。
                 </p>
                 <ul class="featured-meta">
                   <li>FastAPI</li>
@@ -225,27 +224,27 @@
               <div class="pillar-grid">
                 <div class="pillar">
                   <h4>Explicit I/O Contracts</h4>
-                  <p>每個 LLM call 有明確的 input / output spec 與 Pydantic schema 驗證，輸出形狀錯誤直接 fail-fast。</p>
+                  <p>每個 LLM call 都寫明 input / output spec，Pydantic schema 卡死，輸出形狀錯了直接 fail-fast。</p>
                 </div>
                 <div class="pillar">
                   <h4>Prompt Versioning</h4>
-                  <p>Prompt / model 版本納入 audit log，可回溯哪個版本產生了哪份輸出，支援 A/B 與 rollback。</p>
+                  <p>Prompt 跟 model 版本都進 audit log，能回溯哪個版本產生了哪份輸出，方便 A/B 跟 rollback。</p>
                 </div>
                 <div class="pillar">
                   <h4>Eval Harness</h4>
-                  <p>Golden fixture + deterministic eval，每次 prompt 變更跑 regression report，行為可驗證、可比較。</p>
+                  <p>有 golden fixture 跟 deterministic eval，prompt 改一行就能跑 regression report 看誰變好誰變差。</p>
                 </div>
                 <div class="pillar">
                   <h4>Cost Guardrails</h4>
-                  <p>Token / cost / quota / privacy guardrails 內建。預算超標前阻擋，每次呼叫都有 cost audit log。</p>
+                  <p>token / cost / quota / privacy guardrail 內建。預算炸掉之前先擋，每次呼叫都有成本紀錄。</p>
                 </div>
                 <div class="pillar">
                   <h4>Pluggable Backend</h4>
-                  <p>同一份程式碼可切換 fake / Claude CLI / Anthropic API 三種 backend，離線測試零成本。</p>
+                  <p>同一份 code 可切 fake / Claude CLI / Anthropic API 三種 backend，離線測試完全不花錢。</p>
                 </div>
                 <div class="pillar">
                   <h4>App-Owned State</h4>
-                  <p>狀態轉換、retry、人工 review gate 由應用程式控制，不交給 LLM 自己決定下一步要做什麼。</p>
+                  <p>狀態轉換、retry、人工 review gate 全部由 app 控制，不讓 LLM 自己決定下一步。</p>
                 </div>
               </div>
             </div>
@@ -259,7 +258,7 @@
           <div class="section-heading reveal">
             <p class="section-kicker">// Skills</p>
             <h2>Tech stack.</h2>
-            <p>以後端與雲原生為核心，搭配 observability、CI/CD 與 LLM workflow 工程實踐。</p>
+            <p>主力在後端跟雲原生 / Kubernetes，CI/CD 跟 observability 是日常，LLM workflow 是最近在練的副本。</p>
           </div>
 
           <div class="skill-grid">
@@ -346,7 +345,7 @@
             <p class="section-kicker">// Experience</p>
             <h2>Career arc.</h2>
             <p>
-              從教育平台 RESTful + Netty 長連線、GitLab CI/CD 建置，到 momo 高流量系統維運、雲原生遷移與 AI workflow 探索。
+              從教育平台寫 API、帶小團隊跑 sprint，到 momo 顧高流量系統、推 EKS 遷移；下班順便玩玩 AI workflow。
             </p>
           </div>
 
@@ -431,7 +430,7 @@
             <p class="section-kicker">// Contact</p>
             <h2>Let&rsquo;s build something<br />that stays up.</h2>
             <p>
-              歡迎交流後端系統、雲原生基礎設施、AI workflow，以及任何技術挑戰夠大、產品規模夠廣的合作機會。
+              想聊雲原生、Kubernetes、CI/CD、高流量系統，或 LLM workflow 工程實踐都歡迎丟訊息給我。技術挑戰夠有趣的工作機會也接受。
             </p>
           </div>
           <div class="contact-actions reveal reveal-delay-1" aria-label="Contact links">
