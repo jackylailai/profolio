@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Jacky Lai 的個人履歷網站，展示後端工程、全端開發、side projects、工作經歷與證照。"
+    />
+    <meta name="theme-color" content="#10211f" />
+    <meta property="og:title" content="Jacky Lai - Portfolio" />
+    <meta
+      property="og:description"
+      content="Software engineer portfolio, resume, projects, experience, and certifications."
+    />
+    <meta property="og:type" content="website" />
+    <title>Jacky Lai - Portfolio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <nav class="nav shell" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="Back to top">
+          <span class="brand-mark">JL</span>
+          <span class="brand-text">Jacky Lai</span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+          <span class="sr-only">Open menu</span>
+        </button>
+
+        <div class="nav-links" id="site-menu">
+          <a href="#about">About</a>
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+          <a href="#certifications">Certifications</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle color theme">
+            <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 4V2m0 20v-2m8-8h2M2 12h2m14.95 6.95 1.42 1.42M3.63 3.63l1.42 1.42m13.9-1.42-1.42 1.42M3.63 20.37l1.42-1.42"
+              />
+              <circle cx="12" cy="12" r="4" />
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z" />
+            </svg>
+          </button>
+          <button class="button button-quiet print-button" type="button" data-print>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 8V3h10v5M6 17H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <path d="M7 14h10v7H7z" />
+            </svg>
+            Print
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-label="Intro">
+        <img class="hero-image" src="assets/hero-workspace.png" alt="" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content shell">
+          <p class="eyebrow">Backend Engineer / Full-stack Builder</p>
+          <h1>Jacky Lai</h1>
+          <p class="hero-lead">
+            專注把複雜的業務流程整理成穩定、可維護的系統。熟悉後端服務、資料庫整合、自動化工具與產品化交付，也會把 side project 做到能展示工程品質。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#projects">View Projects</a>
+            <a class="button button-secondary" href="#contact">Contact</a>
+          </div>
+          <dl class="hero-metrics" aria-label="Portfolio highlights">
+            <div>
+              <dt>Backend</dt>
+              <dd>API and data workflows</dd>
+            </div>
+            <div>
+              <dt>Full-stack</dt>
+              <dd>Product UI to persistence</dd>
+            </div>
+            <div>
+              <dt>Quality</dt>
+              <dd>Tests, tooling, delivery</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section intro-band" id="about">
+        <div class="shell two-column">
+          <div>
+            <p class="section-kicker">About</p>
+            <h2>把需求、資料與工程品質接起來。</h2>
+          </div>
+          <div class="rich-copy">
+            <p>
+              我偏好的工程方式是先把資料模型、狀態轉移、錯誤處理與測試邊界定清楚，再用簡潔可靠的實作支撐長期維護。
+            </p>
+            <p>
+              目前 portfolio 先放可公開的專案摘要，包含近期正在做的 Resume Helper，也保留空間讓你之後補上其他工作經歷、證照與更完整的專案成果。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="skills">
+        <div class="shell">
+          <div class="section-heading">
+            <p class="section-kicker">Skills</p>
+            <h2>技術棧</h2>
+            <p>以後端與資料流程為核心，搭配前端介面、部署工具與測試策略，把功能推到可交付狀態。</p>
+          </div>
+
+          <div class="skill-grid">
+            <article class="skill-panel">
+              <div class="skill-icon" aria-hidden="true">BE</div>
+              <h3>Backend</h3>
+              <ul class="tag-list">
+                <li>Java</li>
+                <li>Spring Boot</li>
+                <li>Python</li>
+                <li>FastAPI</li>
+                <li>REST API</li>
+              </ul>
+            </article>
+            <article class="skill-panel">
+              <div class="skill-icon" aria-hidden="true">DB</div>
+              <h3>Data & Ops</h3>
+              <ul class="tag-list">
+                <li>Oracle</li>
+                <li>PostgreSQL</li>
+                <li>SQL Tuning</li>
+                <li>Alembic</li>
+                <li>Docker</li>
+              </ul>
+            </article>
+            <article class="skill-panel">
+              <div class="skill-icon" aria-hidden="true">FE</div>
+              <h3>Frontend</h3>
+              <ul class="tag-list">
+                <li>JavaScript</li>
+                <li>TypeScript</li>
+                <li>HTML/CSS</li>
+                <li>Responsive UI</li>
+                <li>Product UX</li>
+              </ul>
+            </article>
+            <article class="skill-panel">
+              <div class="skill-icon" aria-hidden="true">QA</div>
+              <h3>Quality</h3>
+              <ul class="tag-list">
+                <li>pytest</li>
+                <li>Testcontainers</li>
+                <li>Playwright</li>
+                <li>GitLab CI</li>
+                <li>Ruff</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section project-section" id="projects">
+        <div class="shell">
+          <div class="section-heading compact">
+            <p class="section-kicker">Side Projects</p>
+            <h2>目前的 side projects</h2>
+          </div>
+
+          <div class="project-grid">
+            <article class="project-card">
+              <div class="project-visual visual-one" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="project-body">
+                <p class="project-type">AI / Productivity</p>
+                <h3>Resume Helper</h3>
+                <p>
+                  單人求職作業台，支援履歷 profile、JD 評分、背景 tailoring、PDF 產出與 Applications tracker。重點放在資料模型、狀態路由、測試與可部署性。
+                </p>
+                <ul class="meta-list">
+                  <li>FastAPI</li>
+                  <li>PostgreSQL</li>
+                  <li>LLM workflow</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="project-visual visual-two" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="project-body">
+                <p class="project-type">Automation / Internal Tool</p>
+                <h3>Promotion Workflow Toolkit</h3>
+                <p>
+                  將促銷資料整理、檢查與交付流程自動化，降低人工比對成本，讓資料異常能更早被發現。
+                </p>
+                <ul class="meta-list">
+                  <li>Java</li>
+                  <li>Oracle</li>
+                  <li>CLI</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="project-visual visual-three" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="project-body">
+                <p class="project-type">Web App / Tooling</p>
+                <h3>Project Name</h3>
+                <p>
+                  預留給下一個你想公開展示的專案。建議補上問題背景、你的實作範圍、技術選型與可量化成果。
+                </p>
+                <ul class="meta-list">
+                  <li>Stack</li>
+                  <li>Demo</li>
+                  <li>GitHub</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="experience">
+        <div class="shell two-column align-start">
+          <div class="sticky-heading">
+            <p class="section-kicker">Experience</p>
+            <h2>工作經歷</h2>
+            <p>
+              這裡先用可公開的工程描述佔位，之後可以替換成正式公司名稱、職稱、時間與具體成果。
+            </p>
+          </div>
+
+          <div class="timeline">
+            <article class="timeline-item">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <p class="timeline-date">2024 - Present</p>
+              <h3>Software Engineer - Company Name</h3>
+              <p>
+                負責核心業務系統維護與功能開發，處理跨系統資料串接、上線流程與問題追蹤。
+              </p>
+              <ul>
+                <li>建立可重複使用的資料檢核流程，縮短人工驗證時間。</li>
+                <li>改善批次作業與查詢流程，降低例行維運成本。</li>
+              </ul>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <p class="timeline-date">2022 - 2024</p>
+              <h3>Backend Developer - Company Name</h3>
+              <p>
+                參與 API、管理後台與資料庫相關功能開發，並協助排查 production issue。
+              </p>
+              <ul>
+                <li>與產品、QA 與營運角色協作，將需求拆解成可交付的開發項目。</li>
+                <li>補強重要流程的日誌與錯誤處理，提高問題定位效率。</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section certificate-band" id="certifications">
+        <div class="shell">
+          <div class="section-heading compact">
+            <p class="section-kicker">Certifications</p>
+            <h2>證照與進修</h2>
+          </div>
+
+          <div class="certificate-grid">
+            <article>
+              <span>01</span>
+              <h3>Certification Name</h3>
+              <p>Issuing Organization - 2026</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Cloud / Backend Course</h3>
+              <p>Provider - 2025</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Language / Domain Skill</h3>
+              <p>Provider - 2024</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section" id="contact">
+        <div class="shell contact-layout">
+          <div>
+            <p class="section-kicker">Contact</p>
+            <h2>Let's build something maintainable.</h2>
+            <p>
+              歡迎交流後端系統、AI workflow、內部工具、自動化流程與產品工程相關機會。
+            </p>
+          </div>
+          <div class="contact-actions" aria-label="Contact links">
+            <a class="button button-primary" href="mailto:your.email@example.com">Email</a>
+            <a class="button button-secondary" href="https://github.com/your-github-id">GitHub</a>
+            <a class="button button-secondary" href="https://www.linkedin.com/in/your-linkedin-id">LinkedIn</a>
+            <button class="button button-quiet" type="button" data-copy-email="your.email@example.com">
+              Copy Email
+            </button>
+            <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <p>© <span data-year></span> Jacky Lai. Built for GitHub Pages.</p>
+        <a href="#top">Back to top</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
