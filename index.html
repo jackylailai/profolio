@@ -122,13 +122,16 @@
           <div class="two-column align-start">
             <div class="rich-copy reveal">
               <p>
-                後端工程師，主力在<strong>雲端跟 Kubernetes</strong>。
+                後端工程師。主力是 <strong>Java、高併發、event-driven 架構</strong>。
               </p>
               <p>
-                <strong>非本科出身</strong>——大學念醫學影像，後來自己學 code 轉進來。
+                也很喜歡<strong>雲端跟 Kubernetes</strong>，算熟，平常都在 AWS / EKS 上面工作。
               </p>
               <p>
-                最近多了個興趣是 <strong>LLM workflow 工程</strong>。下面 Resume Helper 那一塊就是。
+                <strong>非本科出身</strong>——大學念中山醫學大學影像暨放射科學系，後來透過網路自學轉職軟體工程師。
+              </p>
+              <p>
+                最近有興趣研究 <strong>LLM workflow</strong>，下面 Resume Helper 那一塊就是這方向的 side project。
               </p>
             </div>
 
@@ -136,16 +139,20 @@
               <p class="section-kicker" style="margin-bottom: 14px;">// What I&rsquo;m good at</p>
               <div class="highlight-grid">
                 <article class="highlight-card">
-                  <p class="label">// Cloud</p>
-                  <p class="figure">AWS &amp; EKS<span>Terraform · Helm · NAT / VPC 設計</span></p>
+                  <p class="label">// Main</p>
+                  <p class="figure">Java · Spring Boot<span>高併發 · event-driven</span></p>
                 </article>
                 <article class="highlight-card">
-                  <p class="label">// Backend</p>
-                  <p class="figure">Spring Boot<span>高併發 · Redis · Kafka</span></p>
+                  <p class="label">// Cloud</p>
+                  <p class="figure">AWS · EKS<span>Terraform · Helm · 喜歡也算熟</span></p>
+                </article>
+                <article class="highlight-card">
+                  <p class="label">// Event &amp; Data</p>
+                  <p class="figure">Kafka · Redis<span>async workflow · hot key 分流</span></p>
                 </article>
                 <article class="highlight-card">
                   <p class="label">// Delivery</p>
-                  <p class="figure">CI/CD<span>GitLab · GitHub Actions · 壓縮部署時間</span></p>
+                  <p class="figure">CI/CD<span>GitLab · GitHub Actions</span></p>
                 </article>
                 <article class="highlight-card">
                   <p class="label">// Observability</p>
@@ -153,11 +160,7 @@
                 </article>
                 <article class="highlight-card">
                   <p class="label">// Side Quest</p>
-                  <p class="figure">LLM Workflow<span>schema · versioning · guardrails</span></p>
-                </article>
-                <article class="highlight-card">
-                  <p class="label">// Misc</p>
-                  <p class="figure">English OK<span>TOEIC 790 · 看得懂技術文件</span></p>
+                  <p class="figure">LLM Workflow<span>schema · versioning · eval</span></p>
                 </article>
               </div>
             </div>
@@ -172,7 +175,7 @@
             <p class="section-kicker">// Side Project · 最近在玩的</p>
             <h2>Resume Helper.</h2>
             <p>
-              這是我下班後在做的 side project，主要是想搞清楚「<strong>怎麼把 LLM 變成一個能維運的後端模組</strong>」——不是 chatbot 那種，是把求職流程切成幾個有邊界的 LLM step，由應用程式控制每一個狀態轉換。<strong>LLM 是 bounded provider，不是大腦。</strong>
+              做這個的<strong>初衷其實只是為了方便根據 JD 修改履歷</strong>——每改一份手動花一兩小時實在太煩。於是寫了個工具：自動爬 JD、評分、生成 tailored 履歷。順便當作 <strong>LLM workflow 工程</strong>的練習場。
             </p>
           </div>
 
@@ -182,7 +185,7 @@
                 <p class="eyebrow">// Architecture</p>
                 <h3>Workflow-first，不是 chatbot-first。</h3>
                 <p>
-                  我做這個的初衷是：<strong>每一個 LLM 呼叫都應該像呼叫一個一般的後端服務</strong>——有明確的 I/O contract、有 schema 驗證、有 prompt 版本、有 cost guardrail、有 regression test。這樣 prompt 改了一行，我也能信任系統行為是可預測的。等於把 LLM 當成「一個會犯錯但邊界清楚」的同事。
+                  雖然出發點很實用，但做下去之後變成在練後端工程：<strong>每一個 LLM 呼叫都當成一個一般的後端服務</strong>——有 I/O contract、schema 驗證、prompt 版本、cost guardrail、regression test。這樣 prompt 改了一行，我也能信任系統行為是可預測的。LLM 是「邊界清楚的同事」，不是大腦。
                 </p>
                 <ul class="featured-meta">
                   <li>FastAPI</li>
@@ -396,8 +399,8 @@
           <div class="certificate-grid">
             <article class="reveal">
               <span>01 · Education</span>
-              <h3>B.S. in Medical Imaging and Radiological Science</h3>
-              <p>Chung Shan Medical University · 2014 – 2018</p>
+              <h3>中山醫學大學影像暨放射科學系</h3>
+              <p>2014 – 2018</p>
             </article>
             <article class="reveal reveal-delay-1">
               <span>02 · Licensed</span>
