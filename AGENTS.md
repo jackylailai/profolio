@@ -20,6 +20,7 @@ Everything else (skills grid, experience timeline, certifications, contact) is s
 index.html      — markup; section order matches the nav
 styles.css      — design tokens + all visual rules
 script.js       — minimal vanilla JS: theme, nav, scroll observers, copy-to-clipboard
+wording-editor.html / .css / .js — local-only browser editor for copy changes
 assets/         — images and static media referenced by index.html
 README.md       — short user-facing notes about deploying to GitHub Pages
 AGENTS.md       — this file
@@ -109,6 +110,14 @@ Local:
 python3 -m http.server 8080
 # then open http://localhost:8080
 ```
+
+Copy editing:
+
+```text
+Open wording-editor.html in Chrome / Edge, choose index.html, edit wording, save.
+```
+
+The wording editor is a local helper for the owner. Do not add it to the public navigation unless explicitly asked.
 
 Deploy: pushing to `main` triggers the GitHub Pages workflow under `.github/workflows/`. No manual step needed.
 

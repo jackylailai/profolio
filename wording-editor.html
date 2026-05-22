@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta
+      name="description"
+      content="Local wording editor for updating static portfolio HTML copy without a build step."
+    />
+    <meta name="theme-color" content="#060912" />
+    <title>Wording Editor · Jacky Lai Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="wording-editor.css" />
+  </head>
+  <body class="wording-editor-page">
+    <main class="editor-shell" aria-label="Static wording editor">
+      <section class="editor-toolbar" aria-label="File actions">
+        <div>
+          <p class="section-kicker">// Local tool</p>
+          <h1>Static wording editor</h1>
+          <p class="editor-lead">
+            Open an HTML file, edit wording fields, then write the changed copy back to the static file.
+          </p>
+        </div>
+
+        <div class="editor-actions">
+          <button class="button button-primary" type="button" data-open-file>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 20h16M5 20V6a2 2 0 0 1 2-2h5l2 3h3a2 2 0 0 1 2 2v11" />
+            </svg>
+            Open HTML
+          </button>
+          <button class="button button-secondary" type="button" data-save-file disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 3h12l2 2v16H5zM8 3v6h8V3M8 21v-7h8v7" />
+            </svg>
+            Save file
+          </button>
+          <button class="button button-quiet" type="button" data-download-file disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+            </svg>
+            Download
+          </button>
+        </div>
+      </section>
+
+      <section class="editor-status-band" aria-label="Editor status">
+        <span data-file-name>No file loaded</span>
+        <span data-entry-count>0 fields</span>
+        <span data-dirty-state>Saved</span>
+        <span data-api-state>Checking browser support...</span>
+      </section>
+
+      <section class="editor-layout" aria-label="Wording workspace">
+        <aside class="editor-index" aria-label="Editable wording fields">
+          <div class="editor-filter">
+            <label>
+              <span>Search</span>
+              <input type="search" placeholder="Find wording..." data-search-input />
+            </label>
+            <label>
+              <span>View</span>
+              <select data-type-filter>
+                <option value="all">All fields</option>
+                <option value="text">Visible text</option>
+                <option value="attribute">Meta and labels</option>
+                <option value="changed">Changed only</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="entry-list" data-entry-list>
+            <p class="empty-state">Open an HTML file to load editable wording.</p>
+          </div>
+        </aside>
+
+        <section class="editor-workspace" aria-label="Selected field editor">
+          <article class="editor-pane">
+            <div class="editor-pane-head">
+              <div>
+                <p class="section-kicker" data-selected-kind>// Field</p>
+                <h2 data-selected-title>No field selected</h2>
+              </div>
+              <div class="editor-stepper" aria-label="Field navigation">
+                <button class="icon-button" type="button" data-previous-entry aria-label="Previous field" disabled>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18 9 12l6-6" /></svg>
+                </button>
+                <button class="icon-button" type="button" data-next-entry aria-label="Next field" disabled>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+                </button>
+              </div>
+            </div>
+
+            <textarea
+              data-editor-text
+              disabled
+              spellcheck="false"
+              aria-label="Selected wording text"
+            ></textarea>
+
+            <div class="editor-field-meta">
+              <span data-selected-location>Line -</span>
+              <span data-selected-length>0 chars</span>
+              <span data-selected-state>Unchanged</span>
+            </div>
+          </article>
+
+          <article class="preview-pane">
+            <div class="editor-pane-head">
+              <div>
+                <p class="section-kicker">// Preview</p>
+                <h2>Rendered HTML</h2>
+              </div>
+              <button class="button button-quiet" type="button" data-refresh-preview disabled>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v6h-6" />
+                </svg>
+                Refresh
+              </button>
+            </div>
+            <iframe title="Edited HTML preview" data-preview></iframe>
+          </article>
+        </section>
+      </section>
+
+      <p class="editor-message" role="status" aria-live="polite" data-editor-message></p>
+    </main>
+
+    <input type="file" accept=".html,.htm,text/html" hidden data-file-input />
+    <script src="wording-editor.js" defer></script>
+  </body>
+</html>

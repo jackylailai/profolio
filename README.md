@@ -100,6 +100,14 @@ python3 -m http.server 8080
 
 No install. No `node_modules`. No watchers. It just opens.
 
+## Local wording editor
+
+Open [`wording-editor.html`](wording-editor.html) when you want to edit portfolio copy like a text editor.
+
+- In Chrome or Edge, click **Open HTML**, choose `index.html`, edit wording fields, then click **Save file** to write back to the static file.
+- In browsers without direct file-write support, use **Download** and replace `index.html` with the downloaded file.
+- The editor only changes extracted text fields and text-like attributes; it leaves classes, layout markup, scripts, and styles alone.
+
 ---
 
 ## Deploy
