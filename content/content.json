@@ -17,7 +17,8 @@
       { "href": "#skills", "label": "Skills" },
       { "href": "#experience", "label": "Experience" },
       { "href": "#credentials", "label": "Credentials" },
-      { "href": "#contact", "label": "Contact" }
+      { "href": "#contact", "label": "Contact" },
+      { "href": "life/", "label": "Life" }
     ]
   },
   "hero": {
