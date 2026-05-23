@@ -1,0 +1,109 @@
+#!/usr/bin/env node
+/**
+ * Visual smoke test. Catches the failure mode where a script.js error
+ * stops the .reveal-class elements from being made visible — the DOM has
+ * text but the page looks blank to humans.
+ *
+ * Usage:
+ *   node scripts/smoke.mjs                # tests the live Pages URL
+ *   node scripts/smoke.mjs http://localhost:8080
+ *
+ * Requires Playwright (chromium). In CI:
+ *   npx --yes playwright@1 install --with-deps chromium
+ */
+
+import { chromium } from "playwright";
+
+const DEFAULT_URL = "https://jackylailai.github.io/profolio/";
+const baseUrl = (process.argv[2] || DEFAULT_URL).replace(/\/$/, "");
+
+const targets = [
+  { path: "/",      heroSelector: "section.hero h1",        label: "main portfolio" },
+  { path: "/life/", heroSelector: "section.life-hero h1",   label: "life page" },
+];
+
+const MIN_OPACITY = 0.9;
+const MIN_HERO_LENGTH = 12;
+
+const browser = await chromium.launch();
+const failures = [];
+
+for (const { path, heroSelector, label } of targets) {
+  const url = `${baseUrl}${path}?smoke=${Date.now()}`;
+  const context = await browser.newContext({
+    bypassCSP: true,
+    extraHTTPHeaders: { "Cache-Control": "no-cache" },
+  });
+  const page = await context.newPage();
+
+  const consoleErrors = [];
+  const pageErrors = [];
+  const failedRequests = [];
+
+  page.on("console", (msg) => {
+    if (msg.type() === "error") consoleErrors.push(msg.text());
+  });
+  page.on("pageerror", (err) => pageErrors.push(err.message));
+  page.on("requestfailed", (req) =>
+    failedRequests.push(`${req.method()} ${req.url()} — ${req.failure()?.errorText}`),
+  );
+
+  await page.goto(url, { waitUntil: "networkidle", timeout: 30_000 });
+  await page.waitForTimeout(1500); // let reveal animations settle
+
+  const snapshot = await page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return { found: false };
+    const cs = getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+    return {
+      found: true,
+      opacity: parseFloat(cs.opacity),
+      visibility: cs.visibility,
+      display: cs.display,
+      text: (el.innerText || "").trim(),
+      width: rect.width,
+      height: rect.height,
+      bodyHasIsLoading: document.body.classList.contains("is-loading"),
+    };
+  }, heroSelector);
+
+  const reasons = [];
+  if (!snapshot.found) reasons.push("hero element not found in DOM");
+  else {
+    if (snapshot.opacity < MIN_OPACITY)
+      reasons.push(`hero opacity ${snapshot.opacity} < ${MIN_OPACITY} (page renders blank)`);
+    if (snapshot.visibility !== "visible")
+      reasons.push(`hero visibility=${snapshot.visibility}`);
+    if (snapshot.display === "none")
+      reasons.push("hero display:none");
+    if (snapshot.text.length < MIN_HERO_LENGTH)
+      reasons.push(`hero text "${snapshot.text}" too short (render.js may have failed)`);
+    if (snapshot.width === 0 || snapshot.height === 0)
+      reasons.push(`hero has zero dimensions (${snapshot.width}x${snapshot.height})`);
+    if (snapshot.bodyHasIsLoading)
+      reasons.push("body still has .is-loading class — render.js did not complete");
+  }
+  if (pageErrors.length) reasons.push(`uncaught page errors: ${pageErrors.join(" | ")}`);
+  if (consoleErrors.length) reasons.push(`console errors: ${consoleErrors.join(" | ")}`);
+  if (failedRequests.length) reasons.push(`failed requests: ${failedRequests.join(" | ")}`);
+
+  const ok = reasons.length === 0;
+  console.log(`${ok ? "PASS" : "FAIL"}  ${label}  ${url}`);
+  console.log(`  snapshot: ${JSON.stringify(snapshot)}`);
+  if (!ok) {
+    for (const reason of reasons) console.log(`  - ${reason}`);
+    failures.push({ url, label, reasons, snapshot });
+  }
+
+  await context.close();
+}
+
+await browser.close();
+
+if (failures.length) {
+  console.error(`\n${failures.length} page(s) failed smoke checks.`);
+  process.exit(1);
+}
+
+console.log("\nAll smoke checks passed.");

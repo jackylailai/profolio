@@ -24,10 +24,12 @@ content/
 styles.css      — design tokens + all visual rules
 script.js       — minimal vanilla JS: theme, nav, scroll observers, typed.js, copy-to-clipboard. Loaded by render.js after hydration.
 wording-editor.html / .css / .js — local-only browser editor for copy changes (legacy; prefer editing content.json)
+life/           — /life/ subpage (blog + photos + now). Self-contained: index.html + life.css. Shares ../styles.css design tokens.
 assets/         — images and static media referenced by index.html
+scripts/        — CI / dev scripts. Currently: smoke.mjs (Playwright visual smoke test). Not loaded by the site.
 README.md       — short user-facing notes about deploying to GitHub Pages
 AGENTS.md       — this file
-.github/        — Pages deployment workflow
+.github/workflows/smoke.yml — post-deploy smoke test workflow (the rest of Pages deploy is GitHub's auto workflow, not file-tracked)
 ```
 
 ### Editing copy
@@ -134,7 +136,9 @@ Open wording-editor.html in Chrome / Edge, choose index.html, edit wording, save
 
 The wording editor is a local helper for the owner. Do not add it to the public navigation unless explicitly asked.
 
-Deploy: pushing to `main` triggers the GitHub Pages workflow under `.github/workflows/`. No manual step needed.
+Deploy: GitHub Pages source is the **`pages-release`** branch (root path). Pushing to `pages-release` triggers the auto-generated `pages build and deployment` workflow. `main` is the integration branch — merge into `pages-release` (fast-forward when possible) to ship.
+
+After deploy the **post-deploy smoke** workflow (`.github/workflows/smoke.yml`) runs Playwright against the live URL and auto-files an issue labelled `smoke-failure` if the page renders blank or throws JS errors. See §7.1 for what it guards against.
 
 ## 7. Quality bar before merging
 
@@ -144,6 +148,26 @@ Deploy: pushing to `main` triggers the GitHub Pages workflow under `.github/work
 - Renders cleanly at 360px / 768px / 1280px widths.
 - Print stylesheet still produces a readable single-color resume view.
 - `prefers-reduced-motion: reduce` disables non-essential motion.
+- **Smoke test passes** against the live or local URL — see §7.1.
+
+### 7.1 The silent-blank-page failure mode
+
+`.reveal` elements start at `opacity: 0` and are revealed by `script.js` (either via GSAP+ScrollTrigger or, as a fallback, IntersectionObserver). If `script.js` throws **anywhere** before that reveal logic runs, every `.reveal` element stays at opacity 0 and the page looks completely blank to a human — but `view-source`, `curl`, and headless-DOM dumps will all show the populated HTML and lie to you.
+
+Past incident: removing `[data-year]` from the DOM during the content.json refactor left `script.js` line 22 (`year.textContent = ...`) dereferencing `null` and crashing the rest of the file. Fixed by null-guarding (`if (year) ...`).
+
+**Required guards going forward**:
+
+1. Any DOM query in `script.js` whose result is used without `?.` or an `if (el)` check must point at an element that absolutely exists. When in doubt, optional-chain.
+2. Run the smoke test before pushing:
+   ```bash
+   python3 -m http.server 8080 &
+   npx --yes playwright@1 install --with-deps chromium
+   node scripts/smoke.mjs http://localhost:8080
+   ```
+3. CI runs the same smoke against the live URL after every Pages deploy. A failure opens a GitHub issue tagged `smoke-failure` so it never goes unnoticed.
+
+**Do not rely on DOM-only verification** (`curl | grep`, `--dump-dom`, jsdom) for visual regressions. Use a real browser screenshot or the smoke test. They are the only signals that catch this class of bug.
 
 ## 8. When in doubt
 

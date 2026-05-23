@@ -1,0 +1,100 @@
+name: Post-deploy smoke
+
+# Runs after the auto-generated "pages build and deployment" workflow finishes
+# on pages-release. Also runnable manually. Catches the silent failure where
+# script.js throws before .reveal elements become visible and the live page
+# renders blank to humans even though the DOM has hydrated content.
+
+on:
+  workflow_run:
+    workflows: ["pages build and deployment"]
+    types: [completed]
+    branches: [pages-release]
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "URL to smoke (defaults to live site)"
+        required: false
+        default: "https://jackylailai.github.io/profolio/"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  smoke:
+    # Only run if the upstream deploy succeeded (skip on failed/cancelled deploys).
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright Chromium
+        run: npx --yes playwright@1 install --with-deps chromium
+
+      - name: Smoke deployed site
+        id: smoke
+        run: node scripts/smoke.mjs "${{ github.event.inputs.url || 'https://jackylailai.github.io/profolio/' }}"
+
+      - name: File issue on failure
+        if: failure() && github.event_name != 'workflow_dispatch'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const sha = context.sha.slice(0, 7);
+            const title = `Smoke test failed for live site (${sha})`;
+            const body = [
+              `The post-deploy smoke test failed for commit \`${context.sha}\`.`,
+              ``,
+              `**Failed run:** ${runUrl}`,
+              ``,
+              `### What this means`,
+              ``,
+              `The live site at https://jackylailai.github.io/profolio/ failed a visual smoke check.`,
+              `The most common cause is a JS error in \`script.js\` (or one of its dependencies) that`,
+              `stops \`.reveal\` elements from being made visible — the page renders blank to humans`,
+              `even though \`view-source\` and DOM dumps show populated HTML.`,
+              ``,
+              `### Reproduce locally`,
+              ``,
+              "```bash",
+              `npx --yes playwright@1 install --with-deps chromium`,
+              `node scripts/smoke.mjs https://jackylailai.github.io/profolio/`,
+              "```",
+              ``,
+              `Or against a local server:`,
+              ``,
+              "```bash",
+              `python3 -m http.server 8080`,
+              `node scripts/smoke.mjs http://localhost:8080`,
+              "```",
+              ``,
+              `### Things to check`,
+              ``,
+              `- \`script.js\` line-by-line for any \`.textContent\` / \`.classList\` access not optional-chained`,
+              `- \`content/content.json\` for missing fields referenced by \`data-copy\` in \`index.html\``,
+              `- CDN library availability (tsParticles, GSAP, ScrollTrigger, Lenis, Typed.js)`,
+            ].join("\n");
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: "smoke-failure",
+            });
+            if (existing.some((i) => i.title === title)) {
+              core.info("Issue already open for this SHA, skipping.");
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ["smoke-failure", "automated"],
+            });
