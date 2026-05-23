@@ -1,6 +1,39 @@
 (() => {
   const TEXT_ATTRIBUTES = new Set(["aria-label", "alt", "title", "placeholder"]);
   const SKIP_TEXT_TAGS = new Set(["script", "style", "svg", "noscript"]);
+  const BLOCK_TEXT_TAGS = new Set([
+    "p",
+    "li",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "blockquote",
+    "figcaption",
+    "dt",
+    "dd",
+  ]);
+  const INLINE_FORMAT_TAGS = new Set([
+    "strong",
+    "em",
+    "b",
+    "i",
+    "u",
+    "s",
+    "del",
+    "ins",
+    "mark",
+    "small",
+    "sub",
+    "sup",
+    "code",
+    "kbd",
+    "abbr",
+    "q",
+    "span",
+  ]);
   const VOID_TAGS = new Set([
     "area",
     "base",
@@ -53,6 +86,7 @@
     filter: "all",
     dirty: false,
     previewTimer: 0,
+    collapsedSections: new Set(),
   };
 
   const decoder = document.createElement("textarea");
@@ -186,8 +220,15 @@
     const entries = [];
     const sectionStack = [];
     const skipStack = [];
+    const blockStack = [];
 
     const currentSection = () => sectionStack.at(-1) || { id: "document", label: "Document" };
+    const currentBlock = () => {
+      for (let i = blockStack.length - 1; i >= 0; i -= 1) {
+        if (!blockStack[i].aborted) return blockStack[i];
+      }
+      return null;
+    };
 
     const addEntry = (entry) => {
       entries.push({
@@ -200,29 +241,86 @@
       });
     };
 
-    const addTextEntry = (start, end) => {
-      if (skipStack.length > 0 || start >= end) return;
-
+    const trimRange = (start, end) => {
+      if (start >= end) return null;
       const raw = source.slice(start, end);
       const leadingWhitespace = raw.match(/^\s*/)?.[0].length ?? 0;
       const trailingWhitespace = raw.match(/\s*$/)?.[0].length ?? 0;
       const textStart = start + leadingWhitespace;
       const textEnd = end - trailingWhitespace;
-
-      if (textStart >= textEnd) return;
-
+      if (textStart >= textEnd) return null;
       const value = decodeHtml(source.slice(textStart, textEnd));
-      if (shouldSkipText(value)) return;
+      if (shouldSkipText(value)) return null;
+      return { start: textStart, end: textEnd, value };
+    };
 
-      const section = currentSection();
+    const emitTextNode = (node, section) => {
       addEntry({
         type: "text",
-        value,
-        start: textStart,
-        end: textEnd,
+        value: node.value,
+        start: node.start,
+        end: node.end,
         sectionId: section.id,
         sectionLabel: section.label,
         label: `${section.label} text`,
+      });
+    };
+
+    const abortBlock = (block) => {
+      if (block.aborted) return;
+      block.aborted = true;
+      block.textNodes.forEach((node) => emitTextNode(node, { id: block.sectionId, label: block.sectionLabel }));
+      block.textNodes = [];
+      block.pendingAttributes.forEach((entry) => addEntry(entry));
+      block.pendingAttributes = [];
+    };
+
+    const holdAttribute = (block, attrEntry) => {
+      block.pendingAttributes.push(attrEntry);
+    };
+
+    const addTextEntry = (start, end) => {
+      if (skipStack.length > 0 || start >= end) return;
+      const trimmed = trimRange(start, end);
+      if (!trimmed) return;
+
+      const block = currentBlock();
+      if (block) {
+        block.textNodes.push(trimmed);
+        return;
+      }
+
+      emitTextNode(trimmed, currentSection());
+    };
+
+    const flushBlock = (block, innerEnd) => {
+      if (block.aborted) return;
+
+      if (!block.hasInlineFormat || block.textNodes.length === 0) {
+        block.textNodes.forEach((node) =>
+          emitTextNode(node, { id: block.sectionId, label: block.sectionLabel }),
+        );
+        block.pendingAttributes.forEach((entry) => addEntry(entry));
+        return;
+      }
+
+      const raw = source.slice(block.innerStart, innerEnd);
+      const leading = raw.match(/^\s*/)?.[0].length ?? 0;
+      const trailing = raw.match(/\s*$/)?.[0].length ?? 0;
+      const start = block.innerStart + leading;
+      const end = innerEnd - trailing;
+      const value = block.textNodes.map((node) => node.value).join("");
+
+      addEntry({
+        type: "text",
+        value,
+        start,
+        end,
+        sectionId: block.sectionId,
+        sectionLabel: block.sectionLabel,
+        tag: block.tag,
+        label: `${block.sectionLabel} <${block.tag}>`,
+        isBlock: true,
       });
     };
 
@@ -252,7 +350,14 @@
 
       if (tagInfo) {
         if (tagInfo.isClosing) {
-          if (SKIP_TEXT_TAGS.has(tagInfo.name)) {
+          if (
+            BLOCK_TEXT_TAGS.has(tagInfo.name) &&
+            blockStack.length > 0 &&
+            blockStack.at(-1).tag === tagInfo.name
+          ) {
+            const block = blockStack.pop();
+            flushBlock(block, index);
+          } else if (SKIP_TEXT_TAGS.has(tagInfo.name)) {
             const lastIndex = skipStack.lastIndexOf(tagInfo.name);
             if (lastIndex !== -1) skipStack.splice(lastIndex, 1);
           } else if (tagInfo.name === "section" && sectionStack.length > 0) {
@@ -267,13 +372,24 @@
               ? attrMap.get("aria-label") || humanize(sectionId)
               : currentSection().label;
 
+          const isBlockText = BLOCK_TEXT_TAGS.has(tagInfo.name) && !tagInfo.isSelfClosing;
+          const isInlineFormat = INLINE_FORMAT_TAGS.has(tagInfo.name);
+          const parentBlock = currentBlock();
+
+          if (isBlockText && parentBlock) abortBlock(parentBlock);
+          if (parentBlock && !isBlockText && !isInlineFormat && !SKIP_TEXT_TAGS.has(tagInfo.name)) {
+            abortBlock(parentBlock);
+          }
+          const activeBlock = currentBlock();
+          if (activeBlock && isInlineFormat) activeBlock.hasInlineFormat = true;
+
           if (skipStack.length === 0 && !SKIP_TEXT_TAGS.has(tagInfo.name)) {
             attributes.forEach((attribute) => {
               if (!shouldIncludeAttribute(tagInfo.name, attribute, attrMap) || shouldSkipText(attribute.value)) {
                 return;
               }
 
-              addEntry({
+              const attrEntry = {
                 type: "attribute",
                 value: attribute.value,
                 start: attribute.start,
@@ -283,7 +399,13 @@
                 tagName: tagInfo.name,
                 attrName: attribute.name,
                 label: `${describeTag(tagInfo.name, attrMap)} ${attribute.name}`,
-              });
+              };
+
+              if (activeBlock && isInlineFormat) {
+                holdAttribute(activeBlock, attrEntry);
+              } else {
+                addEntry(attrEntry);
+              }
             });
           }
 
@@ -294,6 +416,19 @@
           if (tagInfo.name === "section" && !tagInfo.isSelfClosing) {
             sectionStack.push({ id: sectionId, label: sectionLabel });
           }
+
+          if (isBlockText) {
+            blockStack.push({
+              tag: tagInfo.name,
+              innerStart: tagEnd + 1,
+              textNodes: [],
+              pendingAttributes: [],
+              hasInlineFormat: false,
+              aborted: false,
+              sectionId,
+              sectionLabel,
+            });
+          }
         }
       }
 
@@ -302,6 +437,10 @@
     }
 
     addTextEntry(textStart, source.length);
+    while (blockStack.length > 0) {
+      const block = blockStack.pop();
+      flushBlock(block, source.length);
+    }
     return entries;
   };
 
@@ -320,6 +459,30 @@
     });
   };
 
+  const buildEntryRow = (entry) => {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "entry-row";
+    row.dataset.entryId = entry.id;
+    row.classList.toggle("is-active", entry.id === state.selectedId);
+    row.classList.toggle("is-changed", hasEntryChanged(entry));
+
+    const meta = document.createElement("span");
+    meta.className = "entry-row-meta";
+    const location = document.createElement("span");
+    location.textContent = entry.isBlock ? `<${entry.tag || "p"}>` : entry.type;
+    const line = document.createElement("span");
+    line.textContent = `L${entry.line}`;
+    meta.append(location, line);
+
+    const text = document.createElement("span");
+    text.className = "entry-row-snippet";
+    text.textContent = snippet(entry.current);
+
+    row.append(meta, text);
+    return row;
+  };
+
   const renderList = () => {
     refs.entryList.replaceChildren();
     const entries = filteredEntries();
@@ -332,31 +495,56 @@
       return;
     }
 
+    const groups = new Map();
+    for (const entry of entries) {
+      const key = entry.sectionId;
+      if (!groups.has(key)) {
+        groups.set(key, { id: key, label: entry.sectionLabel, entries: [] });
+      }
+      groups.get(key).entries.push(entry);
+    }
+
+    const searchActive = state.query.trim().length > 0;
     const fragment = document.createDocumentFragment();
-    entries.forEach((entry) => {
-      const row = document.createElement("button");
-      row.type = "button";
-      row.className = "entry-row";
-      row.dataset.entryId = entry.id;
-      row.classList.toggle("is-active", entry.id === state.selectedId);
-      row.classList.toggle("is-changed", hasEntryChanged(entry));
 
-      const meta = document.createElement("span");
-      meta.className = "entry-row-meta";
+    for (const group of groups.values()) {
+      const collapsed = !searchActive && state.collapsedSections.has(group.id);
 
-      const location = document.createElement("span");
-      location.textContent = `${entry.sectionLabel} · ${entry.type}`;
-      const line = document.createElement("span");
-      line.textContent = `L${entry.line}`;
-      meta.append(location, line);
+      const groupEl = document.createElement("div");
+      groupEl.className = "entry-group";
+      if (collapsed) groupEl.classList.add("is-collapsed");
 
-      const text = document.createElement("span");
-      text.className = "entry-row-snippet";
-      text.textContent = snippet(entry.current);
+      const header = document.createElement("button");
+      header.type = "button";
+      header.className = "entry-group-header";
+      header.dataset.sectionId = group.id;
+      header.setAttribute("aria-expanded", String(!collapsed));
 
-      row.append(meta, text);
-      fragment.append(row);
-    });
+      const caret = document.createElement("span");
+      caret.className = "entry-group-caret";
+      caret.textContent = collapsed ? "▸" : "▾";
+      caret.setAttribute("aria-hidden", "true");
+
+      const name = document.createElement("span");
+      name.className = "entry-group-name";
+      name.textContent = group.label;
+
+      const count = document.createElement("span");
+      count.className = "entry-group-count";
+      count.textContent = String(group.entries.length);
+
+      header.append(caret, name, count);
+      groupEl.append(header);
+
+      if (!collapsed) {
+        const body = document.createElement("div");
+        body.className = "entry-group-body";
+        group.entries.forEach((entry) => body.append(buildEntryRow(entry)));
+        groupEl.append(body);
+      }
+
+      fragment.append(groupEl);
+    }
 
     refs.entryList.append(fragment);
   };
@@ -440,16 +628,25 @@
     state.previewTimer = window.setTimeout(refreshPreview, 180);
   };
 
-  const loadSource = (source, fileName, fileHandle = null) => {
+  const loadSource = (source, fileName, fileHandle = null, options = {}) => {
+    const preserveView = Boolean(options.preserveView);
+    const previousSelectedId = state.selectedId;
     state.source = source;
     state.fileName = fileName;
     state.fileHandle = fileHandle;
     state.entries = extractEntries(source);
-    state.selectedId = state.entries[0]?.id || "";
-    state.query = "";
-    state.filter = "all";
-    refs.searchInput.value = "";
-    refs.typeFilter.value = "all";
+    if (preserveView && state.entries.some((entry) => entry.id === previousSelectedId)) {
+      state.selectedId = previousSelectedId;
+    } else {
+      state.selectedId = state.entries[0]?.id || "";
+    }
+    if (!preserveView) {
+      state.query = "";
+      state.filter = "all";
+      state.collapsedSections = new Set();
+      refs.searchInput.value = "";
+      refs.typeFilter.value = "all";
+    }
 
     setMessage(`${state.entries.length} editable fields loaded from ${fileName}.`, "success");
     render();
@@ -459,10 +656,14 @@
   const openWithFilePicker = async () => {
     const [fileHandle] = await window.showOpenFilePicker({
       multiple: false,
+      excludeAcceptAllOption: false,
       types: [
         {
           description: "HTML files",
-          accept: { "text/html": [".html", ".htm"] },
+          accept: {
+            "text/html": [".html", ".htm"],
+            "application/xhtml+xml": [".xhtml"],
+          },
         },
       ],
     });
@@ -499,7 +700,7 @@
 
     const fileName = state.fileName;
     const fileHandle = state.fileHandle;
-    loadSource(output, fileName, fileHandle);
+    loadSource(output, fileName, fileHandle, { preserveView: true });
     setMessage(`${fileName} saved.`, "success");
   };
 
@@ -548,6 +749,14 @@
   refs.refreshPreview.addEventListener("click", refreshPreview);
 
   refs.entryList.addEventListener("click", (event) => {
+    const header = event.target.closest(".entry-group-header");
+    if (header) {
+      const id = header.dataset.sectionId;
+      if (state.collapsedSections.has(id)) state.collapsedSections.delete(id);
+      else state.collapsedSections.add(id);
+      render();
+      return;
+    }
     const row = event.target.closest("[data-entry-id]");
     if (!row) return;
     selectEntry(row.dataset.entryId);

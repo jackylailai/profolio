@@ -107,6 +107,7 @@ Open [`wording-editor.html`](wording-editor.html) when you want to edit portfoli
 - In Chrome or Edge, click **Open HTML**, choose `index.html`, edit wording fields, then click **Save file** to write back to the static file.
 - In browsers without direct file-write support, use **Download** and replace `index.html` with the downloaded file.
 - The editor only changes extracted text fields and text-like attributes; it leaves classes, layout markup, scripts, and styles alone.
+- Block-text containers (`<p>`, `<li>`, `<h1>`–`<h6>`, `<blockquote>`, `<figcaption>`, `<dt>`, `<dd>`) that mix text with inline formatting (`<strong>`, `<em>`, `<span>`, …) are exposed as a single editable paragraph. Saving rewrites the whole paragraph, so inline formatting tags inside that paragraph are stripped. Containers with `<a>`, `<br>`, or other non-formatting children fall back to per-text-node editing so links and breaks survive.
 
 ---
 
