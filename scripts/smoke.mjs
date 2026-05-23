@@ -29,25 +29,38 @@ const MIN_HERO_LENGTH = 12;
 const browser = await chromium.launch();
 const failures = [];
 
+// First-party = same origin as baseUrl. We only fail on errors from our own
+// origin or on uncaught JS exceptions. Third-party CDN flakes (font CORS,
+// ORB-blocked scripts) are logged as warnings but don't fail the test.
+const baseOrigin = new URL(baseUrl).origin;
+const isFirstParty = (urlStr) => {
+  try { return new URL(urlStr).origin === baseOrigin; } catch { return false; }
+};
+
 for (const { path, heroSelector, label } of targets) {
   const url = `${baseUrl}${path}?smoke=${Date.now()}`;
-  const context = await browser.newContext({
-    bypassCSP: true,
-    extraHTTPHeaders: { "Cache-Control": "no-cache" },
-  });
+  const context = await browser.newContext();
   const page = await context.newPage();
 
-  const consoleErrors = [];
   const pageErrors = [];
-  const failedRequests = [];
+  const firstPartyConsoleErrors = [];
+  const thirdPartyConsoleErrors = [];
+  const firstPartyRequestFailures = [];
+  const thirdPartyRequestFailures = [];
 
   page.on("console", (msg) => {
-    if (msg.type() === "error") consoleErrors.push(msg.text());
+    if (msg.type() !== "error") return;
+    const loc = msg.location();
+    const bucket = !loc.url || isFirstParty(loc.url)
+      ? firstPartyConsoleErrors
+      : thirdPartyConsoleErrors;
+    bucket.push(`${msg.text()} (${loc.url || "<inline>"})`);
   });
   page.on("pageerror", (err) => pageErrors.push(err.message));
-  page.on("requestfailed", (req) =>
-    failedRequests.push(`${req.method()} ${req.url()} — ${req.failure()?.errorText}`),
-  );
+  page.on("requestfailed", (req) => {
+    const line = `${req.method()} ${req.url()} — ${req.failure()?.errorText}`;
+    (isFirstParty(req.url()) ? firstPartyRequestFailures : thirdPartyRequestFailures).push(line);
+  });
 
   await page.goto(url, { waitUntil: "networkidle", timeout: 30_000 });
   await page.waitForTimeout(1500); // let reveal animations settle
@@ -86,12 +99,18 @@ for (const { path, heroSelector, label } of targets) {
       reasons.push("body still has .is-loading class — render.js did not complete");
   }
   if (pageErrors.length) reasons.push(`uncaught page errors: ${pageErrors.join(" | ")}`);
-  if (consoleErrors.length) reasons.push(`console errors: ${consoleErrors.join(" | ")}`);
-  if (failedRequests.length) reasons.push(`failed requests: ${failedRequests.join(" | ")}`);
+  if (firstPartyConsoleErrors.length)
+    reasons.push(`first-party console errors: ${firstPartyConsoleErrors.join(" | ")}`);
+  if (firstPartyRequestFailures.length)
+    reasons.push(`first-party failed requests: ${firstPartyRequestFailures.join(" | ")}`);
 
   const ok = reasons.length === 0;
   console.log(`${ok ? "PASS" : "FAIL"}  ${label}  ${url}`);
   console.log(`  snapshot: ${JSON.stringify(snapshot)}`);
+  if (thirdPartyConsoleErrors.length)
+    console.log(`  warn  third-party console errors (ignored): ${thirdPartyConsoleErrors.length}`);
+  if (thirdPartyRequestFailures.length)
+    console.log(`  warn  third-party request failures (ignored): ${thirdPartyRequestFailures.length}`);
   if (!ok) {
     for (const reason of reasons) console.log(`  - ${reason}`);
     failures.push({ url, label, reasons, snapshot });
