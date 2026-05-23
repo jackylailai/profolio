@@ -1,6 +1,39 @@
 (() => {
   const TEXT_ATTRIBUTES = new Set(["aria-label", "alt", "title", "placeholder"]);
   const SKIP_TEXT_TAGS = new Set(["script", "style", "svg", "noscript"]);
+  const BLOCK_TEXT_TAGS = new Set([
+    "p",
+    "li",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "blockquote",
+    "figcaption",
+    "dt",
+    "dd",
+  ]);
+  const INLINE_FORMAT_TAGS = new Set([
+    "strong",
+    "em",
+    "b",
+    "i",
+    "u",
+    "s",
+    "del",
+    "ins",
+    "mark",
+    "small",
+    "sub",
+    "sup",
+    "code",
+    "kbd",
+    "abbr",
+    "q",
+    "span",
+  ]);
   const VOID_TAGS = new Set([
     "area",
     "base",
@@ -186,8 +219,15 @@
     const entries = [];
     const sectionStack = [];
     const skipStack = [];
+    const blockStack = [];
 
     const currentSection = () => sectionStack.at(-1) || { id: "document", label: "Document" };
+    const currentBlock = () => {
+      for (let i = blockStack.length - 1; i >= 0; i -= 1) {
+        if (!blockStack[i].aborted) return blockStack[i];
+      }
+      return null;
+    };
 
     const addEntry = (entry) => {
       entries.push({
@@ -200,29 +240,86 @@
       });
     };
 
-    const addTextEntry = (start, end) => {
-      if (skipStack.length > 0 || start >= end) return;
-
+    const trimRange = (start, end) => {
+      if (start >= end) return null;
       const raw = source.slice(start, end);
       const leadingWhitespace = raw.match(/^\s*/)?.[0].length ?? 0;
       const trailingWhitespace = raw.match(/\s*$/)?.[0].length ?? 0;
       const textStart = start + leadingWhitespace;
       const textEnd = end - trailingWhitespace;
-
-      if (textStart >= textEnd) return;
-
+      if (textStart >= textEnd) return null;
       const value = decodeHtml(source.slice(textStart, textEnd));
-      if (shouldSkipText(value)) return;
+      if (shouldSkipText(value)) return null;
+      return { start: textStart, end: textEnd, value };
+    };
 
-      const section = currentSection();
+    const emitTextNode = (node, section) => {
       addEntry({
         type: "text",
-        value,
-        start: textStart,
-        end: textEnd,
+        value: node.value,
+        start: node.start,
+        end: node.end,
         sectionId: section.id,
         sectionLabel: section.label,
         label: `${section.label} text`,
+      });
+    };
+
+    const abortBlock = (block) => {
+      if (block.aborted) return;
+      block.aborted = true;
+      block.textNodes.forEach((node) => emitTextNode(node, { id: block.sectionId, label: block.sectionLabel }));
+      block.textNodes = [];
+      block.pendingAttributes.forEach((entry) => addEntry(entry));
+      block.pendingAttributes = [];
+    };
+
+    const holdAttribute = (block, attrEntry) => {
+      block.pendingAttributes.push(attrEntry);
+    };
+
+    const addTextEntry = (start, end) => {
+      if (skipStack.length > 0 || start >= end) return;
+      const trimmed = trimRange(start, end);
+      if (!trimmed) return;
+
+      const block = currentBlock();
+      if (block) {
+        block.textNodes.push(trimmed);
+        return;
+      }
+
+      emitTextNode(trimmed, currentSection());
+    };
+
+    const flushBlock = (block, innerEnd) => {
+      if (block.aborted) return;
+
+      if (!block.hasInlineFormat || block.textNodes.length === 0) {
+        block.textNodes.forEach((node) =>
+          emitTextNode(node, { id: block.sectionId, label: block.sectionLabel }),
+        );
+        block.pendingAttributes.forEach((entry) => addEntry(entry));
+        return;
+      }
+
+      const raw = source.slice(block.innerStart, innerEnd);
+      const leading = raw.match(/^\s*/)?.[0].length ?? 0;
+      const trailing = raw.match(/\s*$/)?.[0].length ?? 0;
+      const start = block.innerStart + leading;
+      const end = innerEnd - trailing;
+      const value = block.textNodes.map((node) => node.value).join("");
+
+      addEntry({
+        type: "text",
+        value,
+        start,
+        end,
+        sectionId: block.sectionId,
+        sectionLabel: block.sectionLabel,
+        tag: block.tag,
+        label: `${block.sectionLabel} <${block.tag}>`,
+        isBlock: true,
       });
     };
 
@@ -252,7 +349,14 @@
 
       if (tagInfo) {
         if (tagInfo.isClosing) {
-          if (SKIP_TEXT_TAGS.has(tagInfo.name)) {
+          if (
+            BLOCK_TEXT_TAGS.has(tagInfo.name) &&
+            blockStack.length > 0 &&
+            blockStack.at(-1).tag === tagInfo.name
+          ) {
+            const block = blockStack.pop();
+            flushBlock(block, index);
+          } else if (SKIP_TEXT_TAGS.has(tagInfo.name)) {
             const lastIndex = skipStack.lastIndexOf(tagInfo.name);
             if (lastIndex !== -1) skipStack.splice(lastIndex, 1);
           } else if (tagInfo.name === "section" && sectionStack.length > 0) {
@@ -267,13 +371,24 @@
               ? attrMap.get("aria-label") || humanize(sectionId)
               : currentSection().label;
 
+          const isBlockText = BLOCK_TEXT_TAGS.has(tagInfo.name) && !tagInfo.isSelfClosing;
+          const isInlineFormat = INLINE_FORMAT_TAGS.has(tagInfo.name);
+          const parentBlock = currentBlock();
+
+          if (isBlockText && parentBlock) abortBlock(parentBlock);
+          if (parentBlock && !isBlockText && !isInlineFormat && !SKIP_TEXT_TAGS.has(tagInfo.name)) {
+            abortBlock(parentBlock);
+          }
+          const activeBlock = currentBlock();
+          if (activeBlock && isInlineFormat) activeBlock.hasInlineFormat = true;
+
           if (skipStack.length === 0 && !SKIP_TEXT_TAGS.has(tagInfo.name)) {
             attributes.forEach((attribute) => {
               if (!shouldIncludeAttribute(tagInfo.name, attribute, attrMap) || shouldSkipText(attribute.value)) {
                 return;
               }
 
-              addEntry({
+              const attrEntry = {
                 type: "attribute",
                 value: attribute.value,
                 start: attribute.start,
@@ -283,7 +398,13 @@
                 tagName: tagInfo.name,
                 attrName: attribute.name,
                 label: `${describeTag(tagInfo.name, attrMap)} ${attribute.name}`,
-              });
+              };
+
+              if (activeBlock && isInlineFormat) {
+                holdAttribute(activeBlock, attrEntry);
+              } else {
+                addEntry(attrEntry);
+              }
             });
           }
 
@@ -294,6 +415,19 @@
           if (tagInfo.name === "section" && !tagInfo.isSelfClosing) {
             sectionStack.push({ id: sectionId, label: sectionLabel });
           }
+
+          if (isBlockText) {
+            blockStack.push({
+              tag: tagInfo.name,
+              innerStart: tagEnd + 1,
+              textNodes: [],
+              pendingAttributes: [],
+              hasInlineFormat: false,
+              aborted: false,
+              sectionId,
+              sectionLabel,
+            });
+          }
         }
       }
 
@@ -302,6 +436,10 @@
     }
 
     addTextEntry(textStart, source.length);
+    while (blockStack.length > 0) {
+      const block = blockStack.pop();
+      flushBlock(block, source.length);
+    }
     return entries;
   };
 
