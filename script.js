@@ -19,7 +19,7 @@ const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 root.dataset.theme = savedTheme || (prefersDark ? "dark" : "dark");
-year.textContent = new Date().getFullYear();
+if (year) year.textContent = new Date().getFullYear();
 
 // ----------------------------------------------- nav
 
