@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "lang": "zh-Hant",
+    "title": "Jacky Lai · Backend Engineer",
+    "description": "Jacky Lai — Cloud-native backend engineer. 50K QPS · EKS · Terraform · Spring Boot · Redis · Kafka. Currently tinkering with AI workflow engineering on the side.",
+    "ogTitle": "Jacky Lai · Cloud-native Backend Engineer",
+    "ogDescription": "Cloud-native backend engineer. Spends weekdays keeping high-traffic systems alive on AWS / EKS; spends weekends tinkering with LLM workflow engineering."
+  },
+  "nav": {
+    "brand": {
+      "mark": "JL",
+      "text": "Jacky Lai"
+    },
+    "links": [
+      { "href": "#about", "label": "About" },
+      { "href": "#resume-helper", "label": "Resume Helper" },
+      { "href": "#skills", "label": "Skills" },
+      { "href": "#experience", "label": "Experience" },
+      { "href": "#credentials", "label": "Credentials" },
+      { "href": "#contact", "label": "Contact" }
+    ]
+  },
+  "hero": {
+    "status": "SYSTEM ONLINE · OPEN TO BACKEND / PLATFORM ROLES",
+    "eyebrow": "Cloud-native Backend Engineer · Kubernetes & AWS",
+    "title": "I keep ==cloud-native backends==\nstanding up at scale.",
+    "leadDefault": "Backend engineer · I live in AWS, EKS, Terraform and Redis.",
+    "metrics": [
+      { "term": "50K QPS", "description": "peak traffic backend operations" },
+      { "term": "40 → 5 min", "description": "CI/CD pipeline cut by 87%" },
+      { "term": "EC2 → EKS", "description": "migration · Terraform · Helm" }
+    ],
+    "ctas": [
+      { "classes": "button button-primary", "href": "#about", "label": "Read the story", "icon": "arrow" },
+      { "classes": "button button-quiet", "href": "#resume-helper", "label": "Or peek at my side project →" }
+    ]
+  },
+  "about": {
+    "kicker": "// About",
+    "title": "Hi, 我是 Jacky.",
+    "paragraphs": [
+      "喜歡**打籃球**，偶爾去**衝浪**，也喜歡**旅遊**。",
+      "我是後端工程師——主力是Java、高併發、event-driven 架構。",
+      "也擅長雲端跟 Kubernetes，熟悉 AWS / EKS 。",
+      "非本科出身——大學時念中山醫學大學影像暨放射科學系，後來透過網路自學轉職成軟體工程師。",
+      "最近有興趣研究LLM workflow， Resume Helper 就是這類型的 side project。"
+    ],
+    "highlightsKicker": "// What I'm good at",
+    "highlights": [
+      { "label": "// Main",          "title": "Java · Spring Boot",   "sub": "高併發 · event-driven" },
+      { "label": "// Cloud",         "title": "AWS · EKS",            "sub": "Terraform · Helm · 喜歡也擅長" },
+      { "label": "// Event & Data",  "title": "Kafka · Redis",        "sub": "async workflow · hot key 分流" },
+      { "label": "// Delivery",      "title": "CI/CD",                "sub": "GitLab · GitHub Actions" },
+      { "label": "// Observability", "title": "ELK + Grafana",        "sub": "OpenSearch · Prometheus" },
+      { "label": "// Side Quest",    "title": "LLM Workflow",         "sub": "schema · versioning · eval" }
+    ]
+  },
+  "resumeHelper": {
+    "kicker": "// Side Project · 最近在玩的",
+    "title": "Resume Helper.",
+    "intro": "做這個的初衷其實只是為了方便根據 JD 修改履歷——每改一份手動花一兩小時實在太煩。於是寫了個工具：自動爬 JD、評分、生成 tailored 履歷。",
+    "architecture": {
+      "eyebrow": "// Architecture",
+      "title": "Workflow-first，不是 chatbot-first。",
+      "description": "每一個 LLM 呼叫都當成一個一般的後端服務——有 I/O contract、schema 驗證、prompt 版本、cost guardrail、regression test。",
+      "stack": ["FastAPI", "PostgreSQL", "Anthropic API", "Playwright", "Docker", "WeasyPrint"],
+      "steps": [
+        { "label": "JD Scrape",  "sub": "104 / Yourator / LinkedIn", "tone": "" },
+        { "label": "LLM Score",  "sub": "0–100 · bounded step",      "tone": "is-accent" },
+        { "label": "Route",      "sub": "Apply / Tailor / Skip",     "tone": "is-violet" },
+        { "label": "Generate",   "sub": "tailored resume · PDF",     "tone": "" }
+      ],
+      "ctas": [
+        {
+          "kind": "primary",
+          "href": "https://github.com/jackylailai/resumeHelper",
+          "label": "View on GitHub",
+          "external": true,
+          "icon": "external"
+        },
+        { "kind": "secondary", "href": "#about", "label": "Back to story" }
+      ]
+    },
+    "pillars": [
+      { "title": "Explicit I/O Contracts", "body": "每個 LLM call 都寫明 input / output spec，Pydantic schema 卡死，輸出形狀錯了直接 fail-fast。" },
+      { "title": "Prompt Versioning",      "body": "Prompt 跟 model 版本都進 audit log，能回溯哪個版本產生了哪份輸出，方便 A/B 跟 rollback。" },
+      { "title": "Eval Harness",           "body": "有 golden fixture 跟 deterministic eval，prompt 改一行就能跑 regression report 看誰變好誰變差。" },
+      { "title": "Cost Guardrails",        "body": "token / cost / quota / privacy guardrail 內建。預算炸掉之前先擋，每次呼叫都有成本紀錄。" },
+      { "title": "Pluggable Backend",      "body": "同一份 code 可切 fake / Claude CLI / Anthropic API 三種 backend，離線測試完全不花錢。" },
+      { "title": "App-Owned State",        "body": "狀態轉換、retry、人工 review gate 全部由 app 控制，不讓 LLM 自己決定下一步。" }
+    ]
+  },
+  "skills": {
+    "kicker": "// Skills",
+    "title": "Tech stack.",
+    "intro": "主力在後端跟雲原生 / Kubernetes，CI/CD 跟 observability",
+    "panels": [
+      { "icon": "BE",    "title": "Backend",                   "delay": "",                "tags": ["Java", "Spring Boot", "Netty", "Python", "FastAPI", "REST", "WebSocket"] },
+      { "icon": "DATA",  "title": "Data & Cache",              "delay": "reveal-delay-1",  "tags": ["Redis", "Kafka", "Oracle", "PostgreSQL", "MySQL", "MongoDB"] },
+      { "icon": "INFRA", "title": "Cloud & Infra",             "delay": "reveal-delay-2",  "tags": ["AWS · EKS", "ASG · ALB", "NAT GW", "Lambda", "EventBridge", "Terraform", "Terragrunt", "Helm"] },
+      { "icon": "OBS",   "title": "CI/CD & Observability",     "delay": "reveal-delay-3",  "tags": ["GitLab Runner", "GitHub Actions", "Prometheus", "Grafana", "OpenSearch (ELK)"] },
+      { "icon": "AI",    "title": "AI Engineering",            "delay": "",                "tags": ["LLM workflow", "Prompt versioning", "Eval harness", "Cost guardrails", "Anthropic API"] },
+      { "icon": "QA",    "title": "Quality",                   "delay": "reveal-delay-1",  "tags": ["pytest", "Testcontainers", "Playwright", "JUnit", "Ruff"] }
+    ]
+  },
+  "experience": {
+    "kicker": "// Experience",
+    "title": "Career arc.",
+    "intro": "從教學訓練平台寫 API、帶小團隊跑 sprint，到 momo 顧高流量系統、推 EKS 遷移",
+    "items": [
+      {
+        "delay": "",
+        "date": "Apr 2025 — Present",
+        "role": "Backend Engineer · Fubon Media Technology (momo)",
+        "summary": "負責高流量促銷系統後端維運，主導雲原生遷移與 CI/CD 流程優化。",
+        "bullets": [
+          "峰值 **50,000 QPS** 系統維運，設計 Redis 快取策略過濾熱點請求、降低 DB 壓力，搭配 AWS Auto Scaling 動態擴展。",
+          "主導 CI/CD 優化將部署時間從 **40 分鐘縮短至 5 分鐘** (87.5% reduction)，提高發版頻率與事故回應速度。",
+          "推動系統架構從 **EC2 → ASG → EKS** 的容器化遷移，使用 Terraform、Terragrunt 與 Helm 建立可重複的雲原生部署。",
+          "設計 Redis key partitioning 策略，乾淨切分 staging / production 流量，杜絕跨環境資料污染。",
+          "建立 OpenSearch (ELK) + Prometheus + Grafana 觀測體系，整合 Kafka consumer 處理非同步工作流。"
+        ]
+      },
+      {
+        "delay": "reveal-delay-1",
+        "date": "Aug 2023 — Apr 2025",
+        "role": "Software Engineer · Tengtz Communications",
+        "summary": "教學訓練平台後端開發與 CI/CD 建置，帶領小團隊執行多個 sprint。",
+        "bullets": [
+          "設計 RESTful API 與 Netty 長連線通訊系統，支援即時互動課堂 session。",
+          "主導 GitLab CI/CD 建置，導入 multi-stage build、平行執行與快取策略，建立全團隊採用的環境部署模式。",
+          "跨服務的 multi-threaded log 監控、結構化 logging 與錯誤分類，顯著降低 debug 時間。",
+          "帶領小型工程團隊跑多個 sprint cycle，負責技術決策、code review 與跨職能協調。"
+        ]
+      },
+      {
+        "delay": "reveal-delay-2",
+        "date": "Jun 2023 — Dec 2023",
+        "role": "Backend Engineer Trainee · WeHelp Bootcamp",
+        "summary": "密集訓練後端開發、雲端部署與第三方整合。",
+        "bullets": [
+          "用 Flask 寫 RESTful API、JWT auth 與第三方金流整合，部署到 AWS (EC2, S3, RDS) + Nginx HTTPS。"
+        ]
+      }
+    ]
+  },
+  "credentials": {
+    "kicker": "// Credentials",
+    "title": "Education & certifications.",
+    "items": [
+      { "delay": "",                "index": "01 · Education", "title": "中山醫學大學影像暨放射科學系",         "sub": "2014 – 2018" },
+      { "delay": "reveal-delay-1",  "index": "02 · Licensed",  "title": "Licensed Medical Radiographer",         "sub": "Taiwan national license" },
+      { "delay": "reveal-delay-2",  "index": "03 · Certified", "title": "Certified Radiation Protection Officer", "sub": "Taiwan national exam · pass rate < 10%" },
+      { "delay": "",                "index": "04 · Language",  "title": "TOEIC 790",                              "sub": "" }
+    ]
+  },
+  "contact": {
+    "kicker": "// Contact",
+    "title": "Let's build something\nthat stays up.",
+    "intro": "想聊雲原生、Kubernetes、CI/CD、高流量系統都歡迎丟訊息給我。技術挑戰的工作機會也接受。",
+    "links": [
+      { "classes": "button button-primary",   "href": "mailto:jkdd84@gmail.com",        "label": "jkdd84@gmail.com",        "icon": true },
+      { "classes": "button button-secondary", "href": "https://github.com/jackylailai", "label": "github.com/jackylailai", "target": "_blank", "rel": "noopener" }
+    ],
+    "copy": { "label": "Copy email", "value": "jkdd84@gmail.com" }
+  },
+  "footer": {
+    "copyright": "© {year} Jacky Lai · Built with vanilla HTML / CSS / JS."
+  }
+}

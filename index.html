@@ -1,25 +1,20 @@
 <!doctype html>
-<html lang="zh-Hant" data-theme="dark">
+<html data-theme="dark" data-attr="lang=meta.lang">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Jacky Lai — Cloud-native backend engineer. 50K QPS · EKS · Terraform · Spring Boot · Redis · Kafka. Currently tinkering with AI workflow engineering on the side."
-    />
+    <meta name="description" data-attr="content=meta.description" />
     <meta name="theme-color" content="#060912" />
-    <meta property="og:title" content="Jacky Lai · Cloud-native Backend Engineer" />
-    <meta
-      property="og:description"
-      content="Cloud-native backend engineer. Spends weekdays keeping high-traffic systems alive on AWS / EKS; spends weekends tinkering with LLM workflow engineering."
-    />
+    <meta property="og:title" data-attr="content=meta.ogTitle" />
+    <meta property="og:description" data-attr="content=meta.ogDescription" />
     <meta property="og:type" content="website" />
-    <title>Jacky Lai · Backend Engineer</title>
+    <title data-text="meta.title">Loading…</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="fetch" href="content/content.json" crossorigin />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="is-loading">
     <a class="skip-link" href="#main">Skip to content</a>
 
     <div id="tsparticles" aria-hidden="true"></div>
@@ -27,8 +22,8 @@
     <header class="site-header" data-header>
       <nav class="nav shell" aria-label="Primary navigation">
         <a class="brand" href="#top" aria-label="Back to top">
-          <span class="brand-mark">JL</span>
-          <span class="brand-text">Jacky Lai</span>
+          <span class="brand-mark" data-copy="nav.brand.mark"></span>
+          <span class="brand-text" data-copy="nav.brand.text"></span>
         </a>
 
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
@@ -38,14 +33,7 @@
           <span class="sr-only">Open menu</span>
         </button>
 
-        <div class="nav-links" id="site-menu">
-          <a href="#about">About</a>
-          <a href="#resume-helper">Resume Helper</a>
-          <a href="#skills">Skills</a>
-          <a href="#experience">Experience</a>
-          <a href="#credentials">Credentials</a>
-          <a href="#contact">Contact</a>
-        </div>
+        <div class="nav-links" id="site-menu" data-list="nav.links" data-item-template="nav-link-template"></div>
 
         <div class="nav-actions">
           <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle color theme">
@@ -77,37 +65,20 @@
         <div class="hero-content shell">
           <div class="hero-status reveal">
             <span class="dot" aria-hidden="true"></span>
-            <span>SYSTEM ONLINE · OPEN TO BACKEND / PLATFORM ROLES</span>
+            <span data-copy="hero.status"></span>
           </div>
-          <p class="eyebrow reveal reveal-delay-1">Cloud-native Backend Engineer · Kubernetes &amp; AWS</p>
-          <h1 class="reveal reveal-delay-1">
-            I keep <span class="accent">cloud-native backends</span><br />
-            standing up at scale.
-          </h1>
+          <p class="eyebrow reveal reveal-delay-1" data-copy="hero.eyebrow"></p>
+          <h1 class="reveal reveal-delay-1" data-copy="hero.title"></h1>
           <p class="hero-lead reveal reveal-delay-2">
-            <span data-typed-target>Backend engineer · I live in AWS, EKS, Terraform and Redis.</span>
+            <span data-typed-target data-copy="hero.leadDefault"></span>
           </p>
-          <div class="hero-actions reveal reveal-delay-3">
-            <a class="button button-primary" href="#about">
-              Read the story
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-            </a>
-            <a class="button button-quiet" href="#resume-helper">Or peek at my side project →</a>
-          </div>
-          <dl class="hero-metrics reveal reveal-delay-3" aria-label="Highlights">
-            <div>
-              <dt>50K QPS</dt>
-              <dd>peak traffic backend operations</dd>
-            </div>
-            <div>
-              <dt>40 → 5 min</dt>
-              <dd>CI/CD pipeline cut by 87%</dd>
-            </div>
-            <div>
-              <dt>EC2 → EKS</dt>
-              <dd>migration · Terraform · Helm</dd>
-            </div>
-          </dl>
+          <div class="hero-actions reveal reveal-delay-3" data-list="hero.ctas" data-item-template="hero-cta-template"></div>
+          <dl
+            class="hero-metrics reveal reveal-delay-3"
+            aria-label="Highlights"
+            data-list="hero.metrics"
+            data-item-template="hero-metric-template"
+          ></dl>
         </div>
       </section>
 
@@ -115,57 +86,16 @@
       <section class="section intro-band" id="about">
         <div class="shell">
           <div class="section-heading reveal">
-            <p class="section-kicker">// About</p>
-            <h2>Hi, 我是 Jacky.</h2>
+            <p class="section-kicker" data-copy="about.kicker"></p>
+            <h2 data-copy="about.title"></h2>
           </div>
 
           <div class="two-column align-start">
-            <div class="rich-copy reveal">
-              <p>
-                喜歡<strong>打籃球</strong>，偶爾去<strong>衝浪</strong>，也喜歡<strong>旅遊</strong>。
-              </p>
-              <p>
-                我是後端工程師——主力是Java、高併發、event-driven 架構。
-              </p>
-              <p>
-                也擅長雲端跟 Kubernetes，熟悉 AWS / EKS 。
-              </p>
-              <p>
-                非本科出身——大學時念中山醫學大學影像暨放射科學系，後來透過網路自學轉職成軟體工程師。
-              </p>
-              <p>
-                最近有興趣研究LLM workflow， Resume Helper 就是這類型的 side project。
-              </p>
-            </div>
+            <div class="rich-copy reveal" data-list="about.paragraphs" data-item-template="rich-paragraph-template"></div>
 
             <div class="reveal reveal-delay-1">
-              <p class="section-kicker" style="margin-bottom: 14px;">// What I&rsquo;m good at</p>
-              <div class="highlight-grid">
-                <article class="highlight-card">
-                  <p class="label">// Main</p>
-                  <p class="figure">Java · Spring Boot<span>高併發 · event-driven</span></p>
-                </article>
-                <article class="highlight-card">
-                  <p class="label">// Cloud</p>
-                  <p class="figure">AWS · EKS<span>Terraform · Helm · 喜歡也擅長</span></p>
-                </article>
-                <article class="highlight-card">
-                  <p class="label">// Event &amp; Data</p>
-                  <p class="figure">Kafka · Redis<span>async workflow · hot key 分流</span></p>
-                </article>
-                <article class="highlight-card">
-                  <p class="label">// Delivery</p>
-                  <p class="figure">CI/CD<span>GitLab · GitHub Actions</span></p>
-                </article>
-                <article class="highlight-card">
-                  <p class="label">// Observability</p>
-                  <p class="figure">ELK + Grafana<span>OpenSearch · Prometheus</span></p>
-                </article>
-                <article class="highlight-card">
-                  <p class="label">// Side Quest</p>
-                  <p class="figure">LLM Workflow<span>schema · versioning · eval</span></p>
-                </article>
-              </div>
+              <p class="section-kicker" style="margin-bottom: 14px;" data-copy="about.highlightsKicker"></p>
+              <div class="highlight-grid" data-list="about.highlights" data-item-template="highlight-card-template"></div>
             </div>
           </div>
         </div>
@@ -175,79 +105,30 @@
       <section class="section project-section" id="resume-helper">
         <div class="shell">
           <div class="section-heading compact reveal">
-            <p class="section-kicker">// Side Project · 最近在玩的</p>
-            <h2>Resume Helper.</h2>
-            <p>
-              做這個的初衷其實只是為了方便根據 JD 修改履歷——每改一份手動花一兩小時實在太煩。於是寫了個工具：自動爬 JD、評分、生成 tailored 履歷。
-            </p>
+            <p class="section-kicker" data-copy="resumeHelper.kicker"></p>
+            <h2 data-copy="resumeHelper.title"></h2>
+            <p data-copy="resumeHelper.intro"></p>
           </div>
 
           <article class="featured-project reveal reveal-delay-1">
             <div class="featured-inner">
               <div class="featured-headline">
-                <p class="eyebrow">// Architecture</p>
-                <h3>Workflow-first，不是 chatbot-first。</h3>
-                <p>
-                  每一個 LLM 呼叫都當成一個一般的後端服務——有 I/O contract、schema 驗證、prompt 版本、cost guardrail、regression test。
-                </p>
-                <ul class="featured-meta">
-                  <li>FastAPI</li>
-                  <li>PostgreSQL</li>
-                  <li>Anthropic API</li>
-                  <li>Playwright</li>
-                  <li>Docker</li>
-                  <li>WeasyPrint</li>
-                </ul>
+                <p class="eyebrow" data-copy="resumeHelper.architecture.eyebrow"></p>
+                <h3 data-copy="resumeHelper.architecture.title"></h3>
+                <p data-copy="resumeHelper.architecture.description"></p>
+                <ul class="featured-meta" data-list="resumeHelper.architecture.stack" data-item-template="featured-stack-template"></ul>
 
-                <div class="architecture" aria-label="Workflow architecture">
-                  <div class="step">JD Scrape<span>104 / Yourator / LinkedIn</span></div>
-                  <div class="step is-accent">LLM Score<span>0–100 · bounded step</span></div>
-                  <div class="step is-violet">Route<span>Apply / Tailor / Skip</span></div>
-                  <div class="step">Generate<span>tailored resume · PDF</span></div>
-                </div>
+                <div
+                  class="architecture"
+                  aria-label="Workflow architecture"
+                  data-list="resumeHelper.architecture.steps"
+                  data-item-template="arch-step-template"
+                ></div>
 
-                <div class="featured-cta">
-                  <a
-                    class="button button-primary"
-                    href="https://github.com/jackylailai/resumeHelper"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    View on GitHub
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 7h10v10M7 17 17 7" />
-                    </svg>
-                  </a>
-                  <a class="button button-secondary" href="#about">Back to story</a>
-                </div>
+                <div class="featured-cta" data-list="resumeHelper.architecture.ctas" data-item-template="resume-cta-template"></div>
               </div>
 
-              <div class="pillar-grid">
-                <div class="pillar">
-                  <h4>Explicit I/O Contracts</h4>
-                  <p>每個 LLM call 都寫明 input / output spec，Pydantic schema 卡死，輸出形狀錯了直接 fail-fast。</p>
-                </div>
-                <div class="pillar">
-                  <h4>Prompt Versioning</h4>
-                  <p>Prompt 跟 model 版本都進 audit log，能回溯哪個版本產生了哪份輸出，方便 A/B 跟 rollback。</p>
-                </div>
-                <div class="pillar">
-                  <h4>Eval Harness</h4>
-                  <p>有 golden fixture 跟 deterministic eval，prompt 改一行就能跑 regression report 看誰變好誰變差。</p>
-                </div>
-                <div class="pillar">
-                  <h4>Cost Guardrails</h4>
-                  <p>token / cost / quota / privacy guardrail 內建。預算炸掉之前先擋，每次呼叫都有成本紀錄。</p>
-                </div>
-                <div class="pillar">
-                  <h4>Pluggable Backend</h4>
-                  <p>同一份 code 可切 fake / Claude CLI / Anthropic API 三種 backend，離線測試完全不花錢。</p>
-                </div>
-                <div class="pillar">
-                  <h4>App-Owned State</h4>
-                  <p>狀態轉換、retry、人工 review gate 全部由 app 控制，不讓 LLM 自己決定下一步。</p>
-                </div>
-              </div>
+              <div class="pillar-grid" data-list="resumeHelper.pillars" data-item-template="pillar-template"></div>
             </div>
           </article>
         </div>
@@ -257,85 +138,12 @@
       <section class="section" id="skills">
         <div class="shell">
           <div class="section-heading reveal">
-            <p class="section-kicker">// Skills</p>
-            <h2>Tech stack.</h2>
-            <p>主力在後端跟雲原生 / Kubernetes，CI/CD 跟 observability 是日常，LLM workflow 是最近在練的副本。</p>
+            <p class="section-kicker" data-copy="skills.kicker"></p>
+            <h2 data-copy="skills.title"></h2>
+            <p data-copy="skills.intro"></p>
           </div>
 
-          <div class="skill-grid">
-            <article class="skill-panel reveal">
-              <div class="skill-icon" aria-hidden="true">BE</div>
-              <h3>Backend</h3>
-              <ul class="tag-list">
-                <li>Java</li>
-                <li>Spring Boot</li>
-                <li>Netty</li>
-                <li>Python</li>
-                <li>FastAPI</li>
-                <li>REST</li>
-                <li>WebSocket</li>
-              </ul>
-            </article>
-            <article class="skill-panel reveal reveal-delay-1">
-              <div class="skill-icon" aria-hidden="true">DATA</div>
-              <h3>Data &amp; Cache</h3>
-              <ul class="tag-list">
-                <li>Redis</li>
-                <li>Kafka</li>
-                <li>Oracle</li>
-                <li>PostgreSQL</li>
-                <li>MySQL</li>
-                <li>MongoDB</li>
-              </ul>
-            </article>
-            <article class="skill-panel reveal reveal-delay-2">
-              <div class="skill-icon" aria-hidden="true">INFRA</div>
-              <h3>Cloud &amp; Infra</h3>
-              <ul class="tag-list">
-                <li>AWS · EKS</li>
-                <li>ASG · ALB</li>
-                <li>NAT GW</li>
-                <li>Lambda</li>
-                <li>EventBridge</li>
-                <li>Terraform</li>
-                <li>Terragrunt</li>
-                <li>Helm</li>
-              </ul>
-            </article>
-            <article class="skill-panel reveal reveal-delay-3">
-              <div class="skill-icon" aria-hidden="true">OBS</div>
-              <h3>CI/CD &amp; Observability</h3>
-              <ul class="tag-list">
-                <li>GitLab Runner</li>
-                <li>GitHub Actions</li>
-                <li>Prometheus</li>
-                <li>Grafana</li>
-                <li>OpenSearch (ELK)</li>
-              </ul>
-            </article>
-            <article class="skill-panel reveal">
-              <div class="skill-icon" aria-hidden="true">AI</div>
-              <h3>AI Engineering</h3>
-              <ul class="tag-list">
-                <li>LLM workflow</li>
-                <li>Prompt versioning</li>
-                <li>Eval harness</li>
-                <li>Cost guardrails</li>
-                <li>Anthropic API</li>
-              </ul>
-            </article>
-            <article class="skill-panel reveal reveal-delay-1">
-              <div class="skill-icon" aria-hidden="true">QA</div>
-              <h3>Quality</h3>
-              <ul class="tag-list">
-                <li>pytest</li>
-                <li>Testcontainers</li>
-                <li>Playwright</li>
-                <li>JUnit</li>
-                <li>Ruff</li>
-              </ul>
-            </article>
-          </div>
+          <div class="skill-grid" data-list="skills.panels" data-item-template="skill-panel-template"></div>
         </div>
       </section>
 
@@ -343,51 +151,12 @@
       <section class="section" id="experience">
         <div class="shell two-column align-start">
           <div class="sticky-heading reveal">
-            <p class="section-kicker">// Experience</p>
-            <h2>Career arc.</h2>
-            <p>
-              從教育平台寫 API、帶小團隊跑 sprint，到 momo 顧高流量系統、推 EKS 遷移；下班順便玩玩 AI workflow。
-            </p>
+            <p class="section-kicker" data-copy="experience.kicker"></p>
+            <h2 data-copy="experience.title"></h2>
+            <p data-copy="experience.intro"></p>
           </div>
 
-          <div class="timeline">
-            <article class="timeline-item reveal">
-              <div class="timeline-dot" aria-hidden="true"></div>
-              <p class="timeline-date">Apr 2025 — Present</p>
-              <h3>Backend Engineer · Fubon Media Technology (momo)</h3>
-              <p>負責高流量促銷系統後端維運，主導雲原生遷移與 CI/CD 流程優化。</p>
-              <ul>
-                <li>峰值 <strong>50,000 QPS</strong> 系統維運，設計 Redis 快取策略過濾熱點請求、降低 DB 壓力，搭配 AWS Auto Scaling 動態擴展。</li>
-                <li>主導 CI/CD 優化將部署時間從 <strong>40 分鐘縮短至 5 分鐘</strong> (87.5% reduction)，提高發版頻率與事故回應速度。</li>
-                <li>推動系統架構從 <strong>EC2 → ASG → EKS</strong> 的容器化遷移，使用 Terraform、Terragrunt 與 Helm 建立可重複的雲原生部署。</li>
-                <li>設計 Redis key partitioning 策略，乾淨切分 staging / production 流量，杜絕跨環境資料污染。</li>
-                <li>建立 OpenSearch (ELK) + Prometheus + Grafana 觀測體系，整合 Kafka consumer 處理非同步工作流。</li>
-              </ul>
-            </article>
-
-            <article class="timeline-item reveal reveal-delay-1">
-              <div class="timeline-dot" aria-hidden="true"></div>
-              <p class="timeline-date">Aug 2023 — Apr 2025</p>
-              <h3>Software Engineer · Tengtz Communications</h3>
-              <p>教育平台後端開發與 CI/CD 建置，帶領小團隊執行多個 sprint。</p>
-              <ul>
-                <li>設計 RESTful API 與 Netty 長連線通訊系統，支援即時互動課堂 session。</li>
-                <li>主導 GitLab CI/CD 建置，導入 multi-stage build、平行執行與快取策略，建立全團隊採用的環境部署模式。</li>
-                <li>跨服務的 multi-threaded log 監控、結構化 logging 與錯誤分類，顯著降低 debug 時間。</li>
-                <li>帶領小型工程團隊跑多個 sprint cycle，負責技術決策、code review 與跨職能協調。</li>
-              </ul>
-            </article>
-
-            <article class="timeline-item reveal reveal-delay-2">
-              <div class="timeline-dot" aria-hidden="true"></div>
-              <p class="timeline-date">Jun 2023 — Dec 2023</p>
-              <h3>Backend Engineer Trainee · WeHelp Bootcamp</h3>
-              <p>密集訓練後端開發、雲端部署與第三方整合。</p>
-              <ul>
-                <li>用 Flask 寫 RESTful API、JWT auth 與第三方金流整合，部署到 AWS (EC2, S3, RDS) + Nginx HTTPS。</li>
-              </ul>
-            </article>
-          </div>
+          <div class="timeline" data-list="experience.items" data-item-template="timeline-item-template"></div>
         </div>
       </section>
 
@@ -395,31 +164,11 @@
       <section class="section certificate-band" id="credentials">
         <div class="shell">
           <div class="section-heading compact reveal">
-            <p class="section-kicker">// Credentials</p>
-            <h2>Education &amp; certifications.</h2>
+            <p class="section-kicker" data-copy="credentials.kicker"></p>
+            <h2 data-copy="credentials.title"></h2>
           </div>
 
-          <div class="certificate-grid">
-            <article class="reveal">
-              <span>01 · Education</span>
-              <h3>中山醫學大學影像暨放射科學系</h3>
-              <p>2014 – 2018</p>
-            </article>
-            <article class="reveal reveal-delay-1">
-              <span>02 · Licensed</span>
-              <h3>Licensed Medical Radiographer</h3>
-              <p>Taiwan national license</p>
-            </article>
-            <article class="reveal reveal-delay-2">
-              <span>03 · Certified</span>
-              <h3>Certified Radiation Protection Officer</h3>
-              <p>Taiwan national exam · pass rate &lt; 10%</p>
-            </article>
-            <article class="reveal">
-              <span>04 · Language</span>
-              <h3>TOEIC 790</h3>
-            </article>
-          </div>
+          <div class="certificate-grid" data-list="credentials.items" data-item-template="credential-card-template"></div>
         </div>
       </section>
 
@@ -427,29 +176,19 @@
       <section class="section contact-section" id="contact">
         <div class="shell contact-layout">
           <div class="reveal">
-            <p class="section-kicker">// Contact</p>
-            <h2>Let&rsquo;s build something<br />that stays up.</h2>
-            <p>
-              想聊雲原生、Kubernetes、CI/CD、高流量系統都歡迎丟訊息給我。技術挑戰的工作機會也接受。
-            </p>
+            <p class="section-kicker" data-copy="contact.kicker"></p>
+            <h2 data-copy="contact.title"></h2>
+            <p data-copy="contact.intro"></p>
           </div>
           <div class="contact-actions reveal reveal-delay-1" aria-label="Contact links">
-            <a class="button button-primary" href="mailto:jkdd84@gmail.com">
-              jkdd84@gmail.com
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 7l9 6 9-6M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2" />
-              </svg>
-            </a>
-            <a
-              class="button button-secondary"
-              href="https://github.com/jackylailai"
-              target="_blank"
-              rel="noopener"
+            <div data-list="contact.links" data-item-template="contact-link-template" style="display: contents;"></div>
+            <button
+              class="button button-quiet"
+              type="button"
+              data-attr="data-copy-email=contact.copy.value"
+              data-copy-email
             >
-              github.com/jackylailai
-            </a>
-            <button class="button button-quiet" type="button" data-copy-email="jkdd84@gmail.com">
-              Copy email
+              <span data-copy="contact.copy.label"></span>
             </button>
             <p class="copy-status" role="status" aria-live="polite" data-copy-status></p>
           </div>
@@ -459,10 +198,114 @@
 
     <footer class="site-footer">
       <div class="shell footer-inner">
-        <p>© <span data-year></span> Jacky Lai · Built with vanilla HTML / CSS / JS.</p>
+        <p data-copy="footer.copyright"></p>
         <a href="#top">↑ Back to top</a>
       </div>
     </footer>
+
+    <!-- ====== Templates ====== -->
+    <template id="nav-link-template">
+      <a data-bind-attr="href=href" data-bind="label"></a>
+    </template>
+
+    <template id="hero-cta-template">
+      <a data-bind-attr="href=href" data-class-from="classes">
+        <span data-bind="label"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" data-if="icon">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    </template>
+
+    <template id="hero-metric-template">
+      <div>
+        <dt data-bind="term"></dt>
+        <dd data-bind="description"></dd>
+      </div>
+    </template>
+
+    <template id="rich-paragraph-template">
+      <p data-bind="value"></p>
+    </template>
+
+    <template id="highlight-card-template">
+      <article class="highlight-card">
+        <p class="label" data-bind="label"></p>
+        <p class="figure" data-bind-html="{title}<span>{sub}</span>"></p>
+      </article>
+    </template>
+
+    <template id="featured-stack-template">
+      <li data-bind="value"></li>
+    </template>
+
+    <template id="arch-step-template">
+      <div class="step" data-class-from="tone" data-bind-html="{label}<span>{sub}</span>"></div>
+    </template>
+
+    <template id="resume-cta-template">
+      <a data-bind-attr="href=href,target=target,rel=rel" data-class-from="classes">
+        <span data-bind="label"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" data-if="icon">
+          <path d="M7 7h10v10M7 17 17 7" />
+        </svg>
+      </a>
+    </template>
+
+    <template id="pillar-template">
+      <div class="pillar">
+        <h4 data-bind="title"></h4>
+        <p data-bind="body"></p>
+      </div>
+    </template>
+
+    <template id="skill-panel-template">
+      <article class="skill-panel reveal" data-class-from="delay">
+        <div class="skill-icon" aria-hidden="true" data-bind-text="icon"></div>
+        <h3 data-bind="title"></h3>
+        <ul class="tag-list" data-list="tags" data-item-template="skill-tag-template"></ul>
+      </article>
+    </template>
+
+    <template id="skill-tag-template">
+      <li data-bind="value"></li>
+    </template>
+
+    <template id="timeline-item-template">
+      <article class="timeline-item reveal" data-class-from="delay">
+        <div class="timeline-dot" aria-hidden="true"></div>
+        <p class="timeline-date" data-bind="date"></p>
+        <h3 data-bind="role"></h3>
+        <p data-bind="summary"></p>
+        <ul data-list="bullets" data-item-template="timeline-bullet-template"></ul>
+      </article>
+    </template>
+
+    <template id="timeline-bullet-template">
+      <li data-bind="value"></li>
+    </template>
+
+    <template id="credential-card-template">
+      <article class="reveal" data-class-from="delay">
+        <span data-bind="index"></span>
+        <h3 data-bind="title"></h3>
+        <p data-bind="sub" data-if="sub"></p>
+      </article>
+    </template>
+
+    <template id="contact-link-template">
+      <!-- Primary / secondary anchors -->
+      <a
+        data-if="href"
+        data-bind-attr="href=href,target=target,rel=rel"
+        data-class-from="classes"
+      >
+        <span data-bind="label"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" data-if="icon">
+          <path d="M3 7l9 6 9-6M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2" />
+        </svg>
+      </a>
+    </template>
 
     <!-- ====== CDN libraries (no build) ====== -->
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.5.0/tsparticles.engine.min.js" defer></script>
@@ -472,6 +315,8 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.42/dist/lenis.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
 
-    <script src="script.js" defer></script>
+    <!-- ====== Content pipeline ====== -->
+    <!-- render.js fetches content.json, hydrates the DOM, then dynamically injects script.js. -->
+    <script src="content/render.js" defer></script>
   </body>
 </html>

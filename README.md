@@ -100,6 +100,23 @@ python3 -m http.server 8080
 
 No install. No `node_modules`. No watchers. It just opens.
 
+## Editing copy
+
+All page copy lives in [`content/content.json`](content/content.json). `index.html` is a template — text fields are placeholders (`data-copy`, `data-text`, `data-attr`) and repeated sections (cards, timeline items, panels) are `<template>` elements expanded by [`content/render.js`](content/render.js).
+
+To change wording, edit `content.json` in any text editor and reload the page. The renderer fetches the JSON, hydrates the template, then unhides `<main>` with a 220 ms fade-in.
+
+Markdown subset supported in any string field:
+
+| Syntax | Renders as |
+|---|---|
+| `**bold**` | `<strong>bold</strong>` |
+| `*italic*` | `<em>italic</em>` |
+| `==text==` | `<span class="accent">text</span>` |
+| `\n` | `<br>` |
+
+For very small text tweaks the [`wording-editor.html`](wording-editor.html) tool still works on the rendered HTML, but editing `content.json` directly is now the primary workflow.
+
 ## Local wording editor
 
 Open [`wording-editor.html`](wording-editor.html) when you want to edit portfolio copy like a text editor.

@@ -124,6 +124,29 @@ body.nav-open {
   overflow: hidden;
 }
 
+/* Hidden until content/render.js finishes hydrating from content.json.
+   The tsparticles backdrop stays visible during the brief load so the page never fully blanks. */
+.site-header,
+main,
+.site-footer {
+  transition: opacity 240ms var(--ease);
+}
+
+body.is-loading > .site-header,
+body.is-loading > main,
+body.is-loading > .site-footer {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  main,
+  .site-footer {
+    transition: none;
+  }
+}
+
 img,
 svg {
   display: block;

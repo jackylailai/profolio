@@ -17,15 +17,30 @@ Everything else (skills grid, experience timeline, certifications, contact) is s
 ## 2. Repository layout
 
 ```
-index.html      — markup; section order matches the nav
+index.html      — template; section order matches the nav. Copy is hydrated at runtime.
+content/
+  content.json  — all page copy (meta, nav, hero, about, resume helper, …) — edit this for wording changes
+  render.js     — fetches content.json, walks the template, fills placeholders, then dynamically injects script.js
 styles.css      — design tokens + all visual rules
-script.js       — minimal vanilla JS: theme, nav, scroll observers, copy-to-clipboard
-wording-editor.html / .css / .js — local-only browser editor for copy changes
+script.js       — minimal vanilla JS: theme, nav, scroll observers, typed.js, copy-to-clipboard. Loaded by render.js after hydration.
+wording-editor.html / .css / .js — local-only browser editor for copy changes (legacy; prefer editing content.json)
 assets/         — images and static media referenced by index.html
 README.md       — short user-facing notes about deploying to GitHub Pages
 AGENTS.md       — this file
 .github/        — Pages deployment workflow
 ```
+
+### Editing copy
+
+For wording changes, edit `content/content.json` directly. The renderer supports a tiny markdown subset in any string: `**bold**`, `*italic*`, `==accent==` (cyan span), `\n` (line break). Token `{year}` is interpolated to the current year.
+
+For structural changes (new section, new card type) you need to add a `<template>` to `index.html` and a corresponding key to `content.json`. The renderer recognises these directives:
+
+- `data-copy="path.to.field"` — element innerHTML, markdown-rendered
+- `data-text="path"` — element textContent (no HTML)
+- `data-attr="attr=path,attr2=path2"` — element attributes
+- `data-list="path" data-item-template="template-id"` — clone template per array item
+- Inside a template: `data-bind`, `data-bind-text`, `data-bind-html`, `data-bind-attr`, `data-class-from`, `data-if`
 
 Do not introduce build tooling, package managers, or transpilers. Vanilla JS only — but **CDN-loaded libraries via `<script src="https://cdn...">` are allowed** for visual effects. Current set:
 
