@@ -86,6 +86,7 @@
     filter: "all",
     dirty: false,
     previewTimer: 0,
+    collapsedSections: new Set(),
   };
 
   const decoder = document.createElement("textarea");
@@ -458,6 +459,30 @@
     });
   };
 
+  const buildEntryRow = (entry) => {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "entry-row";
+    row.dataset.entryId = entry.id;
+    row.classList.toggle("is-active", entry.id === state.selectedId);
+    row.classList.toggle("is-changed", hasEntryChanged(entry));
+
+    const meta = document.createElement("span");
+    meta.className = "entry-row-meta";
+    const location = document.createElement("span");
+    location.textContent = entry.isBlock ? `<${entry.tag || "p"}>` : entry.type;
+    const line = document.createElement("span");
+    line.textContent = `L${entry.line}`;
+    meta.append(location, line);
+
+    const text = document.createElement("span");
+    text.className = "entry-row-snippet";
+    text.textContent = snippet(entry.current);
+
+    row.append(meta, text);
+    return row;
+  };
+
   const renderList = () => {
     refs.entryList.replaceChildren();
     const entries = filteredEntries();
@@ -470,31 +495,56 @@
       return;
     }
 
+    const groups = new Map();
+    for (const entry of entries) {
+      const key = entry.sectionId;
+      if (!groups.has(key)) {
+        groups.set(key, { id: key, label: entry.sectionLabel, entries: [] });
+      }
+      groups.get(key).entries.push(entry);
+    }
+
+    const searchActive = state.query.trim().length > 0;
     const fragment = document.createDocumentFragment();
-    entries.forEach((entry) => {
-      const row = document.createElement("button");
-      row.type = "button";
-      row.className = "entry-row";
-      row.dataset.entryId = entry.id;
-      row.classList.toggle("is-active", entry.id === state.selectedId);
-      row.classList.toggle("is-changed", hasEntryChanged(entry));
 
-      const meta = document.createElement("span");
-      meta.className = "entry-row-meta";
+    for (const group of groups.values()) {
+      const collapsed = !searchActive && state.collapsedSections.has(group.id);
 
-      const location = document.createElement("span");
-      location.textContent = `${entry.sectionLabel} · ${entry.type}`;
-      const line = document.createElement("span");
-      line.textContent = `L${entry.line}`;
-      meta.append(location, line);
+      const groupEl = document.createElement("div");
+      groupEl.className = "entry-group";
+      if (collapsed) groupEl.classList.add("is-collapsed");
 
-      const text = document.createElement("span");
-      text.className = "entry-row-snippet";
-      text.textContent = snippet(entry.current);
+      const header = document.createElement("button");
+      header.type = "button";
+      header.className = "entry-group-header";
+      header.dataset.sectionId = group.id;
+      header.setAttribute("aria-expanded", String(!collapsed));
 
-      row.append(meta, text);
-      fragment.append(row);
-    });
+      const caret = document.createElement("span");
+      caret.className = "entry-group-caret";
+      caret.textContent = collapsed ? "▸" : "▾";
+      caret.setAttribute("aria-hidden", "true");
+
+      const name = document.createElement("span");
+      name.className = "entry-group-name";
+      name.textContent = group.label;
+
+      const count = document.createElement("span");
+      count.className = "entry-group-count";
+      count.textContent = String(group.entries.length);
+
+      header.append(caret, name, count);
+      groupEl.append(header);
+
+      if (!collapsed) {
+        const body = document.createElement("div");
+        body.className = "entry-group-body";
+        group.entries.forEach((entry) => body.append(buildEntryRow(entry)));
+        groupEl.append(body);
+      }
+
+      fragment.append(groupEl);
+    }
 
     refs.entryList.append(fragment);
   };
@@ -578,16 +628,25 @@
     state.previewTimer = window.setTimeout(refreshPreview, 180);
   };
 
-  const loadSource = (source, fileName, fileHandle = null) => {
+  const loadSource = (source, fileName, fileHandle = null, options = {}) => {
+    const preserveView = Boolean(options.preserveView);
+    const previousSelectedId = state.selectedId;
     state.source = source;
     state.fileName = fileName;
     state.fileHandle = fileHandle;
     state.entries = extractEntries(source);
-    state.selectedId = state.entries[0]?.id || "";
-    state.query = "";
-    state.filter = "all";
-    refs.searchInput.value = "";
-    refs.typeFilter.value = "all";
+    if (preserveView && state.entries.some((entry) => entry.id === previousSelectedId)) {
+      state.selectedId = previousSelectedId;
+    } else {
+      state.selectedId = state.entries[0]?.id || "";
+    }
+    if (!preserveView) {
+      state.query = "";
+      state.filter = "all";
+      state.collapsedSections = new Set();
+      refs.searchInput.value = "";
+      refs.typeFilter.value = "all";
+    }
 
     setMessage(`${state.entries.length} editable fields loaded from ${fileName}.`, "success");
     render();
@@ -597,10 +656,14 @@
   const openWithFilePicker = async () => {
     const [fileHandle] = await window.showOpenFilePicker({
       multiple: false,
+      excludeAcceptAllOption: false,
       types: [
         {
           description: "HTML files",
-          accept: { "text/html": [".html", ".htm"] },
+          accept: {
+            "text/html": [".html", ".htm"],
+            "application/xhtml+xml": [".xhtml"],
+          },
         },
       ],
     });
@@ -637,7 +700,7 @@
 
     const fileName = state.fileName;
     const fileHandle = state.fileHandle;
-    loadSource(output, fileName, fileHandle);
+    loadSource(output, fileName, fileHandle, { preserveView: true });
     setMessage(`${fileName} saved.`, "success");
   };
 
@@ -686,6 +749,14 @@
   refs.refreshPreview.addEventListener("click", refreshPreview);
 
   refs.entryList.addEventListener("click", (event) => {
+    const header = event.target.closest(".entry-group-header");
+    if (header) {
+      const id = header.dataset.sectionId;
+      if (state.collapsedSections.has(id)) state.collapsedSections.delete(id);
+      else state.collapsedSections.add(id);
+      render();
+      return;
+    }
     const row = event.target.closest("[data-entry-id]");
     if (!row) return;
     selectEntry(row.dataset.entryId);
