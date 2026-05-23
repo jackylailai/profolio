@@ -162,7 +162,8 @@ Past incident: removing `[data-year]` from the DOM during the content.json refac
 2. Run the smoke test before pushing:
    ```bash
    python3 -m http.server 8080 &
-   npx --yes playwright@1 install --with-deps chromium
+   npm install --no-save playwright@1
+   npx playwright install chromium
    node scripts/smoke.mjs http://localhost:8080
    ```
 3. CI runs the same smoke against the live URL after every Pages deploy. A failure opens a GitHub issue tagged `smoke-failure` so it never goes unnoticed.

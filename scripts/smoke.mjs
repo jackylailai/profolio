@@ -8,8 +8,9 @@
  *   node scripts/smoke.mjs                # tests the live Pages URL
  *   node scripts/smoke.mjs http://localhost:8080
  *
- * Requires Playwright (chromium). In CI:
- *   npx --yes playwright@1 install --with-deps chromium
+ * Requires Playwright (chromium). Install first:
+ *   npm install --no-save playwright@1
+ *   npx playwright install chromium
  */
 
 import { chromium } from "playwright";
