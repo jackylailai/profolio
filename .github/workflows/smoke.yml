@@ -6,10 +6,17 @@ name: Post-deploy smoke
 # renders blank to humans even though the DOM has hydrated content.
 
 on:
+  # Deploy-time check: runs after every Pages deploy on pages-release.
   workflow_run:
     workflows: ["pages build and deployment"]
     types: [completed]
     branches: [pages-release]
+  # Drift check: runs every 6 hours. Catches regressions that aren't tied to
+  # a deploy — third-party CDN outages, Pages edge-cache going stale, an
+  # expired CNAME, etc. Cron is UTC.
+  schedule:
+    - cron: "17 */6 * * *"
+  # Manual trigger for ad-hoc verification.
   workflow_dispatch:
     inputs:
       url:
@@ -23,8 +30,9 @@ permissions:
 
 jobs:
   smoke:
-    # Only run if the upstream deploy succeeded (skip on failed/cancelled deploys).
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    # Always run on schedule + manual dispatch. For workflow_run, only run if
+    # the upstream deploy actually succeeded (don't smoke a failed deploy).
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -45,6 +53,7 @@ jobs:
         run: node scripts/smoke.mjs "${{ github.event.inputs.url || 'https://jackylailai.github.io/profolio/' }}"
 
       - name: File issue on failure
+        # Skip for manual dispatch (user is watching the run live).
         if: failure() && github.event_name != 'workflow_dispatch'
         uses: actions/github-script@v7
         with:
