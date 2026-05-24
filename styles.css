@@ -324,8 +324,6 @@ textarea {
   cursor: pointer;
   color: var(--ink-strong);
   background: var(--surface);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   transition:
     transform var(--motion-fast),
     border-color var(--motion-fast),
