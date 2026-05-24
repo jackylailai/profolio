@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>content.json editor · Jacky Lai Portfolio</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body { padding: 24px 0 80px; }
+      .editor-shell { max-width: 920px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; gap: 20px; }
+      .editor-head { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; }
+      .editor-head h1 { margin: 0; font-size: 1.5rem; }
+      .editor-head p { margin: 6px 0 0; color: var(--muted); font-size: 0.92rem; }
+      .toolbar { display: flex; flex-wrap: wrap; gap: 10px; }
+      .toolbar .button { min-height: 38px; padding: 8px 14px; font-size: 0.88rem; }
+      .status { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; align-self: center; }
+      .status.dirty { color: var(--magenta); border-color: var(--magenta); }
+      .status.ok { color: var(--accent-strong); border-color: var(--accent); }
+
+      details.node { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin: 0; }
+      details.node[open] { border-color: var(--line-strong); }
+      details.node > summary { cursor: pointer; padding: 10px 14px; font-family: var(--font-mono); font-size: 0.84rem; color: var(--muted-strong); display: flex; gap: 10px; align-items: center; }
+      details.node > summary::marker { color: var(--accent); }
+      details.node > summary .key { color: var(--ink-strong); }
+      details.node > summary .meta { color: var(--muted); font-size: 0.78rem; margin-left: auto; }
+      details.node .body { padding: 6px 14px 14px; display: flex; flex-direction: column; gap: 12px; }
+
+      .field { display: grid; grid-template-columns: 180px 1fr; gap: 10px; align-items: start; }
+      .field label { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted-strong); padding-top: 8px; word-break: break-all; }
+      .field textarea, .field input[type="text"], .field input[type="number"] {
+        width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line);
+        background: var(--bg-deep); color: var(--ink); font-family: var(--font-mono); font-size: 0.88rem;
+        line-height: 1.5; resize: vertical;
+      }
+      .field textarea { min-height: 36px; }
+      .field input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+
+      .array-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px; border: 1px dashed var(--line); border-radius: 8px; }
+      .array-item .item-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+      .array-item .item-index { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); padding-top: 8px; }
+      .row-actions { display: flex; gap: 6px; }
+      .icon-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--muted-strong); cursor: pointer; font-size: 14px; }
+      .icon-btn:hover { color: var(--accent-strong); border-color: var(--accent); }
+      .icon-btn.danger:hover { color: var(--magenta); border-color: var(--magenta); }
+
+      .raw-view { margin-top: 24px; }
+      .raw-view textarea { width: 100%; min-height: 240px; font-family: var(--font-mono); font-size: 0.82rem; background: var(--bg-deep); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+      .raw-view.error textarea { border-color: var(--magenta); }
+      .raw-msg { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+      .raw-msg.error { color: var(--magenta); }
+    </style>
+  </head>
+  <body>
+    <main class="editor-shell">
+      <header class="editor-head">
+        <div>
+          <h1>content.json editor</h1>
+          <p>Edit copy locally, download the JSON, drop it back into <code>content/content.json</code>.</p>
+        </div>
+        <div class="toolbar">
+          <span class="status" id="status">idle</span>
+          <button class="button button-quiet" type="button" id="reload">Reload from disk</button>
+          <button class="button button-quiet" type="button" id="import">Import file…</button>
+          <button class="button button-primary" type="button" id="download">Download content.json</button>
+          <input type="file" id="import-file" accept="application/json" hidden />
+        </div>
+      </header>
+
+      <div id="form"></div>
+
+      <details class="raw-view" id="raw-view">
+        <summary>Raw JSON (advanced)</summary>
+        <p class="raw-msg" id="raw-msg">Edit the JSON directly. Changes apply when you click "Apply raw".</p>
+        <textarea id="raw-textarea" spellcheck="false"></textarea>
+        <div style="margin-top: 8px; display: flex; gap: 8px;">
+          <button class="button button-quiet" type="button" id="raw-apply">Apply raw</button>
+          <button class="button button-quiet" type="button" id="raw-sync">Sync from form</button>
+        </div>
+      </details>
+    </main>
+
+    <script>
+      const CONTENT_URL = "../content/content.json";
+      let data = null;
+      let dirty = false;
+      const $ = (id) => document.getElementById(id);
+
+      const setStatus = (text, cls = "") => {
+        const el = $("status");
+        el.textContent = text;
+        el.className = "status " + cls;
+      };
+      const markDirty = () => { dirty = true; setStatus("modified", "dirty"); };
+
+      // ---------------- Renderer ----------------
+
+      const isPlainObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+
+      function renderRoot(obj) {
+        const form = $("form");
+        form.replaceChildren();
+        for (const key of Object.keys(obj)) {
+          form.append(renderNode(key, obj[key], obj, key));
+        }
+        syncRawFromData();
+      }
+
+      function renderNode(key, value, parent, parentKey) {
+        if (isPlainObject(value)) return renderObject(key, value, parent, parentKey);
+        if (Array.isArray(value)) return renderArray(key, value, parent, parentKey);
+        return renderScalar(key, value, parent, parentKey);
+      }
+
+      function renderObject(key, value, parent, parentKey) {
+        const details = document.createElement("details");
+        details.className = "node";
+        details.open = true;
+        const summary = document.createElement("summary");
+        summary.innerHTML = `<span class="key">${key}</span><span class="meta">{ ${Object.keys(value).length} fields }</span>`;
+        details.append(summary);
+        const body = document.createElement("div");
+        body.className = "body";
+        for (const childKey of Object.keys(value)) {
+          body.append(renderNode(childKey, value[childKey], value, childKey));
+        }
+        details.append(body);
+        return details;
+      }
+
+      function renderArray(key, value, parent, parentKey) {
+        const details = document.createElement("details");
+        details.className = "node";
+        details.open = true;
+        const summary = document.createElement("summary");
+        summary.innerHTML = `<span class="key">${key}</span><span class="meta">[ ${value.length} items ]</span>`;
+        const addBtn = document.createElement("button");
+        addBtn.type = "button";
+        addBtn.className = "icon-btn";
+        addBtn.textContent = "+";
+        addBtn.title = "Add item";
+        addBtn.onclick = (e) => {
+          e.preventDefault();
+          const template = value.length ? structuredClone(value[0]) : "";
+          const blanked = blankClone(template);
+          value.push(blanked);
+          markDirty();
+          rerender(parent, parentKey);
+        };
+        summary.append(addBtn);
+        details.append(summary);
+        const body = document.createElement("div");
+        body.className = "body";
+        value.forEach((item, idx) => {
+          const wrap = document.createElement("div");
+          wrap.className = "array-item";
+          const indexLabel = document.createElement("div");
+          indexLabel.className = "item-index";
+          indexLabel.textContent = `[${idx}]`;
+          wrap.append(indexLabel);
+          const itemBody = document.createElement("div");
+          itemBody.className = "item-body";
+          if (isPlainObject(item)) {
+            for (const k of Object.keys(item)) itemBody.append(renderNode(k, item[k], item, k));
+          } else if (Array.isArray(item)) {
+            itemBody.append(renderArray(`${idx}`, item, value, idx));
+          } else {
+            itemBody.append(renderScalar("value", item, value, idx, true));
+          }
+          wrap.append(itemBody);
+          const actions = document.createElement("div");
+          actions.className = "row-actions";
+          const rmBtn = document.createElement("button");
+          rmBtn.type = "button";
+          rmBtn.className = "icon-btn danger";
+          rmBtn.textContent = "×";
+          rmBtn.title = "Remove item";
+          rmBtn.onclick = (e) => {
+            e.preventDefault();
+            value.splice(idx, 1);
+            markDirty();
+            rerender(parent, parentKey);
+          };
+          actions.append(rmBtn);
+          wrap.append(actions);
+          body.append(wrap);
+        });
+        details.append(body);
+        return details;
+      }
+
+      function renderScalar(key, value, parent, parentKey, hideLabel = false) {
+        const wrap = document.createElement("div");
+        wrap.className = "field";
+        const label = document.createElement("label");
+        label.textContent = hideLabel ? "" : key;
+        wrap.append(label);
+        if (typeof value === "boolean") {
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.checked = value;
+          input.addEventListener("change", () => { parent[parentKey] = input.checked; markDirty(); syncRawFromData(); });
+          wrap.append(input);
+        } else if (typeof value === "number") {
+          const input = document.createElement("input");
+          input.type = "number";
+          input.value = value;
+          input.addEventListener("input", () => { parent[parentKey] = input.value === "" ? 0 : Number(input.value); markDirty(); syncRawFromData(); });
+          wrap.append(input);
+        } else {
+          const text = value == null ? "" : String(value);
+          const multiline = text.includes("\n") || text.length > 80;
+          const input = document.createElement(multiline ? "textarea" : "input");
+          if (!multiline) input.type = "text";
+          input.value = text;
+          if (multiline) input.rows = Math.min(8, Math.max(2, text.split("\n").length + 1));
+          input.addEventListener("input", () => { parent[parentKey] = input.value; markDirty(); syncRawFromData(); });
+          wrap.append(input);
+        }
+        return wrap;
+      }
+
+      function blankClone(v) {
+        if (typeof v === "string") return "";
+        if (typeof v === "number") return 0;
+        if (typeof v === "boolean") return false;
+        if (Array.isArray(v)) return [];
+        if (isPlainObject(v)) {
+          const out = {};
+          for (const k of Object.keys(v)) out[k] = blankClone(v[k]);
+          return out;
+        }
+        return null;
+      }
+
+      function rerender() {
+        renderRoot(data);
+      }
+
+      // ---------------- Raw view <-> data ----------------
+
+      const rawTextarea = () => $("raw-textarea");
+      const rawMsg = () => $("raw-msg");
+
+      function syncRawFromData() {
+        rawTextarea().value = JSON.stringify(data, null, 2);
+        rawMsg().textContent = "In sync with the form.";
+        rawMsg().className = "raw-msg";
+        $("raw-view").classList.remove("error");
+      }
+
+      $("raw-apply").onclick = () => {
+        try {
+          const next = JSON.parse(rawTextarea().value);
+          data = next;
+          markDirty();
+          rerender();
+        } catch (e) {
+          rawMsg().textContent = `Parse error: ${e.message}`;
+          rawMsg().className = "raw-msg error";
+          $("raw-view").classList.add("error");
+        }
+      };
+      $("raw-sync").onclick = syncRawFromData;
+
+      // ---------------- Toolbar actions ----------------
+
+      async function loadFromServer() {
+        const res = await fetch(`${CONTENT_URL}?cb=${Date.now()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        data = await res.json();
+        dirty = false;
+        setStatus("loaded", "ok");
+        rerender();
+      }
+
+      $("reload").onclick = async () => {
+        if (dirty && !confirm("Discard local changes and reload?")) return;
+        try { await loadFromServer(); }
+        catch (e) { setStatus(`load failed: ${e.message}`, "dirty"); }
+      };
+
+      $("download").onclick = () => {
+        const blob = new Blob([JSON.stringify(data, null, 2) + "\n"], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "content.json";
+        a.click();
+        URL.revokeObjectURL(a.href);
+        setStatus("downloaded — copy into content/content.json", "ok");
+        dirty = false;
+      };
+
+      $("import").onclick = () => $("import-file").click();
+      $("import-file").addEventListener("change", async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          data = JSON.parse(text);
+          markDirty();
+          rerender();
+          setStatus("imported (not yet downloaded)", "dirty");
+        } catch (err) {
+          setStatus(`import failed: ${err.message}`, "dirty");
+        } finally {
+          e.target.value = "";
+        }
+      });
+
+      window.addEventListener("beforeunload", (e) => { if (dirty) { e.preventDefault(); e.returnValue = ""; }});
+
+      loadFromServer().catch((e) => setStatus(`load failed: ${e.message}`, "dirty"));
+    </script>
+  </body>
+</html>

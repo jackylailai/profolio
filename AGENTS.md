@@ -23,7 +23,7 @@ content/
   render.js     — fetches content.json, walks the template, fills placeholders, then dynamically injects script.js
 styles.css      — design tokens + all visual rules
 script.js       — minimal vanilla JS: theme, nav, scroll observers, typed.js, copy-to-clipboard. Loaded by render.js after hydration.
-wording-editor.html / .css / .js — local-only browser editor for copy changes (legacy; prefer editing content.json)
+editor/         — local content.json editor (single HTML, form-based). Loads content/content.json, lets you edit, downloads the result. Not used by the live site.
 life/           — /life/ subpage (blog + photos + now). Self-contained: index.html + life.css. Shares ../styles.css design tokens.
 assets/         — images and static media referenced by index.html
 scripts/        — CI / dev scripts. Currently: smoke.mjs (Playwright visual smoke test). Not loaded by the site.
@@ -130,11 +130,14 @@ python3 -m http.server 8080
 
 Copy editing:
 
-```text
-Open wording-editor.html in Chrome / Edge, choose index.html, edit wording, save.
+```bash
+python3 -m http.server 8080
+# then open http://localhost:8080/editor/
 ```
 
-The wording editor is a local helper for the owner. Do not add it to the public navigation unless explicitly asked.
+The editor loads `content/content.json`, renders an editable tree, and downloads the modified file. Drop the download back into `content/content.json` and commit.
+
+The editor is a helper for the owner. Do not add it to the public navigation unless explicitly asked.
 
 Deploy: GitHub Pages source is the **`pages-release`** branch (root path). Pushing to `pages-release` triggers the auto-generated `pages build and deployment` workflow. `main` is the integration branch — merge into `pages-release` (fast-forward when possible) to ship.
 

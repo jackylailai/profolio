@@ -115,16 +115,18 @@ Markdown subset supported in any string field:
 | `==text==` | `<span class="accent">text</span>` |
 | `\n` | `<br>` |
 
-For very small text tweaks the [`wording-editor.html`](wording-editor.html) tool still works on the rendered HTML, but editing `content.json` directly is now the primary workflow.
+## Local content editor
 
-## Local wording editor
+`editor/index.html` is a small form-based editor for `content/content.json`:
 
-Open [`wording-editor.html`](wording-editor.html) when you want to edit portfolio copy like a text editor.
+```bash
+python3 -m http.server 8080
+# open http://localhost:8080/editor/
+```
 
-- In Chrome or Edge, click **Open HTML**, choose `index.html`, edit wording fields, then click **Save file** to write back to the static file.
-- In browsers without direct file-write support, use **Download** and replace `index.html` with the downloaded file.
-- The editor only changes extracted text fields and text-like attributes; it leaves classes, layout markup, scripts, and styles alone.
-- Block-text containers (`<p>`, `<li>`, `<h1>`–`<h6>`, `<blockquote>`, `<figcaption>`, `<dt>`, `<dd>`) that mix text with inline formatting (`<strong>`, `<em>`, `<span>`, …) are exposed as a single editable paragraph. Saving rewrites the whole paragraph, so inline formatting tags inside that paragraph are stripped. Containers with `<a>`, `<br>`, or other non-formatting children fall back to per-text-node editing so links and breaks survive.
+It loads the JSON, renders an editable tree (strings → inputs / textareas, arrays → add/remove rows, objects → collapsible sections), and a **Download** button gives you the modified `content.json` to drop back into `content/`. There is also a raw-JSON panel for advanced edits with syntax validation.
+
+(The previous `wording-editor.html` worked against inline HTML copy and became obsolete after the content.json refactor.)
 
 ---
 
