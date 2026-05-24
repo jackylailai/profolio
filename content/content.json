@@ -18,7 +18,7 @@
       { "href": "#experience", "label": "Experience" },
       { "href": "#credentials", "label": "Credentials" },
       { "href": "#contact", "label": "Contact" },
-      { "href": "life/", "label": "Life" }
+      { "href": "https://jackylailai.github.io/life/", "label": "Life" }
     ]
   },
   "hero": {
@@ -34,7 +34,7 @@
     "ctas": [
       { "classes": "button button-primary", "href": "#about", "label": "Read the story", "icon": "arrow" },
       { "classes": "button button-quiet", "href": "#resume-helper", "label": "Or peek at my side project →" },
-      { "classes": "button button-quiet", "href": "life/", "label": "Life →" }
+      { "classes": "button button-quiet", "href": "https://jackylailai.github.io/life/", "label": "Life →" }
     ]
   },
   "about": {
